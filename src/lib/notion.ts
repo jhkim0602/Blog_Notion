@@ -66,7 +66,7 @@ export async function getPost(pageId: string): Promise<Post | null> {
     const { parent: contentString } = n2m.toMarkdownString(mdBlocks);
 
     // Get first paragraph for description (excluding empty lines)
-    const paragraphs = contentString
+    const paragraphs = (contentString || "")
       .split("\n")
       .filter((line: string) => line.trim().length > 0);
     const firstParagraph = paragraphs[0] || "";
