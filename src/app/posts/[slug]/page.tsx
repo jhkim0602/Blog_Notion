@@ -69,6 +69,13 @@ export async function generateMetadata(
   };
 }
 
+export async function generateStaticParams() {
+  const posts = await fetchPublishedPosts();
+  return posts.results.map((post) => ({ slug: post.id }));
+}
+
+export const revalidate = 60; // 1분마다 갱신
+
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
   const posts = await fetchPublishedPosts();

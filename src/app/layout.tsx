@@ -11,21 +11,21 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-site.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "Gesturs - The Notion Blog",
-    template: `%s | Gesturs`,
+    default: "KJH's DevBlog",
+    template: `%s | KJH's DevBlog`,
   },
-  description: "A blog built with Next.js and Notion",
+  description: "This blog built with Next.js and Notion",
   openGraph: {
-    title: "Gesturs - The Notion Blog",
+    title: "KJH's Dev Blog with Notion",
     description: "A blog built with Next.js and Notion",
     url: siteUrl,
-    siteName: "Gesturs",
+    siteName: "KJH's Dev Blog with Notion",
     images: [
       {
         url: `${siteUrl}/opengraph-image.png`,
         width: 1200,
         height: 630,
-        alt: "Gesturs - The Notion Blog",
+        alt: "KJH's Dev Blog with Notion",
       },
     ],
     locale: "en_US",
@@ -33,7 +33,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Gesturs - The Notion Blog",
+    title: "KJH's Dev Blog with Notion",
     description: "A blog built with Next.js and Notion",
     images: [`${siteUrl}/opengraph-image.png`],
   },

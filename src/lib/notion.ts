@@ -76,12 +76,15 @@ export async function getPost(pageId: string): Promise<Post | null> {
     const properties = page.properties as any;
 
     //console.log("Title Raw:", properties["Title"]?.title);
-    console.log("Post Properties:", properties);
+    //console.log("Post Properties:", properties);
 
+    //page는 notion api에서 받아온 한개의 페이지(글) 데이터
+    //post는 타입/객체 이며 코드에서 사용하기 위해 page를 가공한
+    //posts는 Post 객체 배열 -> 블로그 메인, 목록 페이지등에서 사용
     const post: Post = {
       id: page.id,
       title: properties.Title.title[0]?.plain_text || "Untitled",
-      slug: page.id.replace(/-/g, "").slice(0, 8),
+      slug: page.id.replace(/-/g, "").slice(0, 15),
       coverImage: properties["Featured Image"]?.url || undefined,
       description,
       date:
@@ -90,8 +93,7 @@ export async function getPost(pageId: string): Promise<Post | null> {
       author: properties.Author?.people[0]?.name,
       tags: properties.Tags?.multi_select?.map((tag: any) => tag.name) || [],
       category: properties.Category?.select?.name,
-    };
-
+    }
 
     return post;
   } catch (error) {
