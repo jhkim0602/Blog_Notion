@@ -1,3 +1,4 @@
+// 노션과 관련된 함수와 타입을 불러온다.
 import { fetchPublishedPosts, getPost, Post } from "@/lib/notion";
 import PostCard from "@/components/post-card";
 
@@ -8,6 +9,7 @@ async function getPosts(): Promise<Post[]> {
   );
   return allPosts.filter((post): post is Post => post !== null);
 }
+export const revalidate = 60;
 
 export default async function Home() {
   const posts = await getPosts();

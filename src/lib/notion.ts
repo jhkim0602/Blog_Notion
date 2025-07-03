@@ -74,15 +74,14 @@ export async function getPost(pageId: string): Promise<Post | null> {
       firstParagraph.slice(0, 160) + (firstParagraph.length > 160 ? "..." : "");
 
     const properties = page.properties as any;
+
+    //console.log("Title Raw:", properties["Title"]?.title);
+    console.log("Post Properties:", properties);
+
     const post: Post = {
       id: page.id,
       title: properties.Title.title[0]?.plain_text || "Untitled",
-      slug:
-        properties.Title.title[0]?.plain_text
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-") // Replace any non-alphanumeric chars with dash
-          .replace(/^-+|-+$/g, "") || // Remove leading/trailing dashes
-        "untitled",
+      slug: page.id.replace(/-/g, "").slice(0, 8),
       coverImage: properties["Featured Image"]?.url || undefined,
       description,
       date:
@@ -92,6 +91,7 @@ export async function getPost(pageId: string): Promise<Post | null> {
       tags: properties.Tags?.multi_select?.map((tag: any) => tag.name) || [],
       category: properties.Category?.select?.name,
     };
+
 
     return post;
   } catch (error) {
