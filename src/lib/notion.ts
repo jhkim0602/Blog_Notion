@@ -2,6 +2,8 @@ import { Client } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 import { PageObjectResponse } from "@notionhq/client/";
 
+console.log("NOTION_TOKEN:", process.env.NOTION_TOKEN);
+
 export const notion = new Client({ auth: process.env.NOTION_TOKEN });
 export const n2m = new NotionToMarkdown({ notionClient: notion });
 
@@ -93,7 +95,7 @@ export async function getPost(pageId: string): Promise<Post | null> {
       author: properties.Author?.people[0]?.name,
       tags: properties.Tags?.multi_select?.map((tag: any) => tag.name) || [],
       category: properties.Category?.select?.name,
-    }
+    };
 
     return post;
   } catch (error) {

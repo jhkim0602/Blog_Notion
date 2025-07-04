@@ -18,7 +18,7 @@ const components = {
     <h1 className="mb-4 font-bold text-4xl">{children}</h1>
   ),
   p: ({ children }: { children?: React.ReactNode }) => (
-    <p className="mb-4">{children}</p>
+    <p className="-mb-1 leading-normal">{children}</p>
   ),
   a: ({ children, href }: { children?: React.ReactNode; href?: string }) => (
     <a href={href} className="text-blue-500">
