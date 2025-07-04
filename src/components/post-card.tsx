@@ -14,14 +14,15 @@ import { Clock, Calendar, ArrowUpRight } from "lucide-react";
 
 interface PostCardProps {
   post: Post;
+  categoryColor?: string;
 }
 
-export default function PostCard({ post }: PostCardProps) {
+export default function PostCard({ post, categoryColor }: PostCardProps) {
   const wordCount = post.content ? getWordCount(post.content) : 0;
   const readingTime = calculateReadingTime(wordCount);
 
   return (
-    <Card className="group relative pt-0 overflow-hidden hover:shadow-xl transition-all duration-300 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <Card className={`group relative pt-0 overflow-hidden hover:shadow-xl transition-all duration-300 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${categoryColor ? `border-t-4 ${categoryColor}` : ''}`}>
       <Link
         href={`/posts/${post.slug}`}
         className="absolute inset-0 z-10"

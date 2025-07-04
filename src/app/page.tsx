@@ -1,6 +1,5 @@
-// 노션과 관련된 함수와 타입을 불러온다.
 import { fetchPublishedPosts, getPost, Post } from "@/lib/notion";
-import PostCard from "@/components/post-card";
+import PostFilterClient from "@/components/post-filter-client";
 
 async function getPosts(): Promise<Post[]> {
   const posts = await fetchPublishedPosts();
@@ -24,12 +23,7 @@ export default async function Home() {
           Notes from a developer who never stops learning.
         </p>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {posts.map((post) => (
-          <PostCard key={post.id} post={post} />
-        ))}
-      </div>
+      <PostFilterClient posts={posts} />
     </div>
   );
 }
