@@ -1,5 +1,3 @@
-"use client"; // 클라이언트 컴포넌트로 전환
-
 
 import { getPost } from "@/lib/notion";
 import { format } from "date-fns";
