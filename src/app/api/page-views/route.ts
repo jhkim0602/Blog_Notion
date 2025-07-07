@@ -63,4 +63,3 @@ export async function GET() {
     return NextResponse.json({ error: 'Failed to fetch total page views' }, { status: 500 });
   }
 }
-}
