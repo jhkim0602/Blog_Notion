@@ -1,28 +1,32 @@
-import { fetchPublishedPosts, getPost, getWordCount } from "@/lib/notion";
+"use client"; // 클라이언트 컴포넌트로 전환
+
+import { getPost } from "@/lib/notion";
 import { format } from "date-fns";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Metadata } from "next";
+import { Metadata } from "next"; // Metadata는 서버 컴포넌트에서만 사용 가능하므로, generateMetadata 함수는 별도로 유지
 import ReactMarkdown from "react-markdown";
 import { ResolvingMetadata } from "next";
 import { Badge } from "@/components/ui/badge";
-import { calculateReadingTime } from "@/lib/utils";
 import { components } from "@/components/mdx-component";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import { useEffect, useState } from "react"; // useEffect, useState 임포트
 
 interface PostPageProps {
-  params: Promise<{ slug: string }>;
+  params: { slug: string }; // Promise<...> 제거
 }
 
+// generateMetadata 함수는 서버 컴포넌트에서만 작동하므로, 이 부분은 그대로 유지
+// 하지만 PostPage가 클라이언트 컴포넌트가 되면서 generateMetadata는 별도로 호출되어야 함
+// Next.js 13+ App Router에서는 generateMetadata는 서버에서 실행되므로,
+// page.tsx가 "use client"여도 generateMetadata는 서버에서 실행됩니다.
 export async function generateMetadata(
   { params }: PostPageProps,
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const { slug } = await params;
-  const posts = await fetchPublishedPosts();
-  const allPosts = await Promise.all(posts.results.map((p) => getPost(p.id)));
-  const post = allPosts.find((p) => p?.slug === slug);
+  const { slug } = params;
+  const post = await getPost(slug); // getPost 직접 호출
 
   if (!post) {
     return {
@@ -69,19 +73,38 @@ export async function generateMetadata(
   };
 }
 
-export async function generateStaticParams() {
-  const posts = await fetchPublishedPosts();
-  return posts.results.map((post) => ({ slug: post.id }));
-}
-
 export const revalidate = 60; // 1분마다 갱신
 
 export default async function PostPage({ params }: PostPageProps) {
-  const { slug } = await params;
-  const posts = await fetchPublishedPosts();
-  const allPosts = await Promise.all(posts.results.map((p) => getPost(p.id)));
-  const post = allPosts.find((p) => p?.slug === slug);
-  const wordCount = post?.content ? getWordCount(post.content) : 0;
+  const { slug } = params;
+  const post = await getPost(slug); // getPost 직접 호출
+
+  const [views, setViews] = useState<number | null>(null); // 조회수 상태 추가
+
+  useEffect(() => {
+    if (!slug) return;
+
+    // 조회수 증가 API 호출
+    fetch(`/api/views/${slug}`, { method: 'POST' })
+      .then(res => res.json())
+      .then(data => {
+        if (data.views !== undefined) {
+          setViews(data.views);
+        }
+      })
+      .catch(err => console.error('Failed to increment view:', err));
+
+    // 초기 조회수 가져오기 (선택 사항, POST 응답에서 바로 받을 수도 있음)
+    fetch(`/api/views/${slug}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.views !== undefined) {
+          setViews(data.views);
+        }
+      })
+      .catch(err => console.error('Failed to fetch initial views:', err));
+  }, [slug]);
+
 
   if (!post) {
     notFound();
@@ -137,8 +160,7 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="flex items-center gap-4 text-muted-foreground mb-4">
             <time>{format(new Date(post.date), "MMMM d, yyyy")}</time>
             {post.author && <span>By {post.author}</span>}
-            <span>{calculateReadingTime(wordCount)}</span>
-            <span>{wordCount} words</span>
+            {views !== null && <span>Views: {views}</span>} {/* 조회수 표시 */}
           </div>
 
           <h1 className="text-4xl font-bold mb-4 text-foreground">

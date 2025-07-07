@@ -1,16 +1,15 @@
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import { Post, getWordCount } from "@/lib/notion";
+import { Post } from "@/lib/notion";
 import { Badge } from "@/components/ui/badge";
-import { calculateReadingTime } from "@/lib/utils";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Clock, Calendar, ArrowUpRight } from "lucide-react";
+import { Clock, Calendar, ArrowUpRight, Eye } from "lucide-react";
 
 interface PostCardProps {
   post: Post;
@@ -18,8 +17,6 @@ interface PostCardProps {
 }
 
 export default function PostCard({ post, categoryColor }: PostCardProps) {
-  const wordCount = post.content ? getWordCount(post.content) : 0;
-  const readingTime = calculateReadingTime(wordCount);
 
   return (
     <Card className={`group relative pt-0 overflow-hidden hover:shadow-xl transition-all duration-300 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${categoryColor ? `border-t-4 ${categoryColor}` : ''}`}>
@@ -56,10 +53,13 @@ export default function PostCard({ post, categoryColor }: PostCardProps) {
             <Calendar className="h-4 w-4" />
             <span>{format(new Date(post.date), "MMM d, yyyy")}</span>
           </div>
-          <div className="flex items-center gap-1.5">
-            <Clock className="h-4 w-4" />
-            <span>{readingTime}</span>
-          </div>
+          {/* 기존 readingTime 대신 조회수 표시 */}
+          {post.views !== undefined && (
+            <div className="flex items-center gap-1.5">
+              <Eye className="h-4 w-4" />
+              <span>{post.views} views</span>
+            </div>
+          )}
         </div>
         <div className="group-hover:pr-8 transition-all duration-300">
           <h2 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">

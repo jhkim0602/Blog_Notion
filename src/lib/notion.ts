@@ -5,7 +5,20 @@ import { PageObjectResponse } from "@notionhq/client/";
 console.log("NOTION_TOKEN:", process.env.NOTION_TOKEN);
 
 export const notion = new Client({ auth: process.env.NOTION_TOKEN });
-export const n2m = new NotionToMarkdown({ notionClient: notion });
+export const n2m = new NotionToMarkdown({
+  notionClient: notion,
+  // Add custom transformer for callout blocks
+  customTransformers: {
+    callout: async (block) => {
+      const { callout } = block as any;
+      if (callout && callout.rich_text) {
+        const text = callout.rich_text.map((rt: any) => rt.plain_text).join("");
+        return `<aside class="notion-aside">${text}</aside>`;
+      }
+      return false; // Fallback to default behavior if not a simple callout
+    },
+  },
+});
 
 export interface Post {
   id: string;
@@ -77,8 +90,7 @@ export async function getPost(pageId: string): Promise<Post | null> {
 
     const properties = page.properties as any;
 
-    //console.log("Title Raw:", properties["Title"]?.title);
-    //console.log("Post Properties:", properties);
+    //console.log("Title Raw:", properties["Title"]?.title);\n    //console.log("Post Properties:", properties);
 
     //page는 notion api에서 받아온 한개의 페이지(글) 데이터
     //post는 타입/객체 이며 코드에서 사용하기 위해 page를 가공한

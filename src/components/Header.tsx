@@ -2,6 +2,7 @@
 import Link from "next/link";
 import { ModeToggle } from "@/components/mode-toggle";
 import { useScrollDirection } from "@/hooks/use-scroll-direction";
+import PageViews from "@/components/page-views"; // PageViews 컴포넌트 임포트
 
 export default function Header() {
   const scrollDir = useScrollDirection();
@@ -23,7 +24,8 @@ export default function Header() {
               KJH's Dev Log
             </Link>
           </div>
-          <div className="flex items-center">
+          <div className="flex items-center gap-4"> {/* gap-4 추가 */}
+            <PageViews /> {/* 방문자 수 컴포넌트 추가 */}
             <ModeToggle />
           </div>
         </div>
