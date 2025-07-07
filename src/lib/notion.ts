@@ -7,9 +7,9 @@ console.log("NOTION_TOKEN:", process.env.NOTION_TOKEN);
 export const notion = new Client({ auth: process.env.NOTION_TOKEN });
 export const n2m = new NotionToMarkdown({
   notionClient: notion,
-  // Add custom transformer for callout blocks
+  // @ts-ignore
   customTransformers: {
-    callout: async (block) => {
+    callout: async (block: any) => {
       const { callout } = block as any;
       if (callout && callout.rich_text) {
         const text = callout.rich_text.map((rt: any) => rt.plain_text).join("");
@@ -31,6 +31,7 @@ export interface Post {
   author?: string;
   tags?: string[];
   category?: string;
+  views?: number; // 조회수 속성 추가
 }
 
 export async function getDatabaseStructure() {

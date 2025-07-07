@@ -1,32 +1,42 @@
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
 
-export async function POST(request: Request, { params }: { params: { slug: string } }) {
-  const { slug } = params;
+export async function POST(request: NextRequest) {
+  const slug = request.nextUrl.pathname.split('/').pop(); // URL에서 slug 추출
+
+  if (!slug) {
+    return NextResponse.json({ error: 'Slug not found' }, { status: 400 });
+  }
 
   try {
-    const postView = await prisma.postView.upsert({
-      where: { slug: slug },
-      update: { views: { increment: 1 } },
-      create: { slug: slug, views: 1 },
-    });
+    const { data, error } = await supabase.rpc('increment_post_view', { post_slug: slug });
 
-    return NextResponse.json({ views: postView.views }, { status: 200 });
+    if (error) throw error;
+
+    return NextResponse.json({ views: data }, { status: 200 });
   } catch (error) {
     console.error('Error updating view count:', error);
     return NextResponse.json({ error: 'Failed to update view count' }, { status: 500 });
   }
 }
 
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
-  const { slug } = params;
+export async function GET(request: NextRequest) {
+  const slug = request.nextUrl.pathname.split('/').pop(); // URL에서 slug 추출
+
+  if (!slug) {
+    return NextResponse.json({ error: 'Slug not found' }, { status: 400 });
+  }
 
   try {
-    const postView = await prisma.postView.findUnique({
-      where: { slug: slug },
-    });
+    const { data, error } = await supabase
+      .from('PostView')
+      .select('views')
+      .eq('slug', slug)
+      .single();
 
-    return NextResponse.json({ views: postView ? postView.views : 0 }, { status: 200 });
+    if (error) throw error;
+
+    return NextResponse.json({ views: data ? data.views : 0 }, { status: 200 });
   } catch (error) {
     console.error('Error fetching view count:', error);
     return NextResponse.json({ error: 'Failed to fetch view count' }, { status: 500 });

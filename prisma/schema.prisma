@@ -3,13 +3,13 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model PostView {
   id        String   @id @default(cuid())
-  slug      String   @unique // 포스트의 고유 slug (ID)
+  slug      String   @unique
   views     Int      @default(0)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
