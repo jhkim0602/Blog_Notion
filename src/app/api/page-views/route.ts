@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { cookies } from 'next/headers';
 
+import { v4 as uuidv4 } from 'uuid'; // uuid 임포트
+
 const TOTAL_VIEWS_ID = 'blog_total_views';
 const VISITOR_COOKIE_NAME = 'blog_visitor_id';
 const COOKIE_EXPIRATION_SECONDS = 60 * 60 * 24;
@@ -20,7 +22,7 @@ export async function POST(request: Request) {
       if (error) throw error;
       pageViewCount = data;
 
-      const newVisitorId = `${Date.now()}-${Math.random().toString(36).substring(2, 15)}`;
+      const newVisitorId = uuidv4(); // uuidv4() 사용
       cookieStore.set(VISITOR_COOKIE_NAME, newVisitorId, {
         maxAge: COOKIE_EXPIRATION_SECONDS,
         path: '/',

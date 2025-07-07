@@ -83,7 +83,6 @@ export default async function PostPage({ params }: PostPageProps) {
           <div className="flex items-center gap-4 text-muted-foreground mb-4">
             <time>{format(new Date(post.date), "MMMM d, yyyy")}</time>
             {post.author && <span>By {post.author}</span>}
-            <PostViewCounter slug={slug} /> {/* 조회수 컴포넌트 추가 */}
           </div>
 
           <h1 className="text-4xl font-bold mb-4 text-foreground">
@@ -113,6 +112,7 @@ export default async function PostPage({ params }: PostPageProps) {
           </ReactMarkdown>
         </div>
       </article>
+      <PostViewCounter slug={slug} /> {/* 조회수 컴포넌트 추가 */}
     </>
   );
 }

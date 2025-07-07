@@ -95,6 +95,7 @@ export async function fetchPublishedPosts(): Promise<{ results: Post[] }> {
 }
 
 export async function getPost(pageId: string): Promise<Post | null> {
+  console.log("getPost called with pageId:", pageId); // 디버깅 로그
   try {
     const page = (await notion.pages.retrieve.bind(notion.pages)({
       page_id: pageId,

@@ -34,7 +34,9 @@ export default function PostViewCounter({ slug }: PostViewCounterProps) {
   }, [slug]);
 
   if (views === null) {
-    return null; // 로딩 중에는 아무것도 표시하지 않음
+    return (
+      <span className="w-16 h-4 bg-gray-200 rounded dark:bg-gray-700 animate-pulse"></span>
+    ); // 로딩 중에는 스켈레톤 표시
   }
 
   return (

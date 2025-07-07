@@ -29,7 +29,12 @@ export default function PageViews() {
   }, []);
 
   if (totalViews === null) {
-    return null; // 로딩 중에는 아무것도 표시하지 않음
+    return (
+      <div className="flex items-center gap-1.5 text-sm text-muted-foreground animate-pulse">
+        <Eye className="h-4 w-4" />
+        <span className="w-16 h-4 bg-gray-200 rounded dark:bg-gray-700"></span>
+      </div>
+    ); // 로딩 중에는 스켈레톤 표시
   }
 
   return (
