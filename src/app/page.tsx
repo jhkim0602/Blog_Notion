@@ -1,13 +1,10 @@
-import { fetchPublishedPosts, getPost, Post } from "@/lib/notion";
+import { fetchPublishedPosts, Post } from "@/lib/notion";
 import PostFilterClient from "@/components/post-filter-client";
 import { Bio } from "@/components/bio";
 
 async function getPosts(): Promise<Post[]> {
   const posts = await fetchPublishedPosts();
-  const allPosts = await Promise.all(
-    posts.results.map((post) => getPost(post.id))
-  );
-  return allPosts.filter((post): post is Post => post !== null);
+  return posts.results; // fetchPublishedPosts가 이미 Post[]를 반환하도록 수정되었으므로 직접 반환
 }
 export const revalidate = 60;
 

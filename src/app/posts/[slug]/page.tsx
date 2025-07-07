@@ -1,12 +1,12 @@
 "use client"; // 클라이언트 컴포넌트로 전환
 
+
 import { getPost } from "@/lib/notion";
 import { format } from "date-fns";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { Metadata } from "next"; // Metadata는 서버 컴포넌트에서만 사용 가능하므로, generateMetadata 함수는 별도로 유지
 import ReactMarkdown from "react-markdown";
-import { ResolvingMetadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { components } from "@/components/mdx-component";
 import remarkGfm from "remark-gfm";

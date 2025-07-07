@@ -1,6 +1,7 @@
 import { Client } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 import { PageObjectResponse } from "@notionhq/client/";
+import { supabase } from "@/lib/supabase"; // Supabase 클라이언트 임포트
 
 console.log("NOTION_TOKEN:", process.env.NOTION_TOKEN);
 
@@ -49,7 +50,7 @@ export function getWordCount(content: string): number {
   return cleanText.split(" ").length;
 }
 
-export async function fetchPublishedPosts() {
+export async function fetchPublishedPosts(): Promise<{ results: Post[] }> {
   const posts = await notion.databases.query({
     database_id: process.env.NOTION_DATABASE_ID!,
     filter: {
@@ -70,12 +71,32 @@ export async function fetchPublishedPosts() {
     ],
   });
 
-  return posts;
+  const allPosts = await Promise.all(
+    posts.results.map(async (p) => {
+      const post = await getPost(p.id);
+      if (!post) return null;
+
+      // Supabase에서 조회수 가져오기
+      const { data, error } = await supabase
+        .from('PostView')
+        .select('views')
+        .eq('slug', post.slug)
+        .single();
+
+      if (error && error.code !== 'PGRST116') { // PGRST116은 데이터가 없을 때 발생 (not found)
+        console.error('Error fetching post views from Supabase:', error);
+      }
+
+      return { ...post, views: data ? data.views : 0 };
+    })
+  );
+
+  return { results: allPosts.filter(Boolean) as Post[] }; // null 값 필터링 후 Post[]로 타입 단언
 }
 
 export async function getPost(pageId: string): Promise<Post | null> {
   try {
-    const page = (await notion.pages.retrieve({
+    const page = (await notion.pages.retrieve.bind(notion.pages)({
       page_id: pageId,
     })) as PageObjectResponse;
     const mdBlocks = await n2m.pageToMarkdown(pageId);
@@ -99,7 +120,7 @@ export async function getPost(pageId: string): Promise<Post | null> {
     const post: Post = {
       id: page.id,
       title: properties.Title.title[0]?.plain_text || "Untitled",
-      slug: page.id.replace(/-/g, "").slice(0, 15),
+      slug: page.id,
       coverImage: properties["Featured Image"]?.url || undefined,
       description,
       date:
