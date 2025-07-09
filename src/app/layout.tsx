@@ -11,31 +11,47 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-site.com";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "KJH's DevBlog",
-    template: `%s | KJH's DevBlog`,
+    default: "정환이의 개발 블로그",
+    template: `%s | 김정환의 개발 블로그`,
   },
-  description: "This blog built with Next.js and Notion",
+  description:
+    "코딩, 프로그래밍, 기술에 대한 생각과 경험의 성장을 공유하는 개발 블로그입니다.",
+  keywords: [
+    "개발블로그",
+    "기술블로그",
+    "프로그래밍",
+    "코딩",
+    "Next.js",
+    "React",
+    "TypeScript",
+    "JavaScript",
+    "개발자",
+    "프론트엔드",
+    "백엔드",
+    "웹 개발",
+    "소프트웨어 개발",
+    "기술",
+    "IT",
+  ],
+  verification: {
+    google: "yY-qORard3SBo58pyL3Hf0ecTZPtibQDI24Z-XOlII8",
+  },
   openGraph: {
-    title: "KJH's Dev Blog with Notion",
-    description: "A blog built with Next.js and Notion",
+    title: "정환이의 개발 블로그",
+    description:
+      "코딩, 프로그래밍, 기술에 대한 생각과 경험을 공유하는 개발 블로그입니다.",
     url: siteUrl,
-    siteName: "KJH's Dev Blog with Notion",
+    siteName: "정환이의 개발 블로그",
     images: [
       {
         url: `${siteUrl}/opengraph-image.png`,
         width: 1200,
         height: 630,
-        alt: "KJH's Dev Blog with Notion",
+        alt: "정환이의 개발 블로그",
       },
     ],
-    locale: "en_US",
+    locale: "ko_KR",
     type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "KJH's Dev Blog with Notion",
-    description: "A blog built with Next.js and Notion",
-    images: [`${siteUrl}/opengraph-image.png`],
   },
   robots: {
     index: true,
@@ -69,7 +85,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    //Seo 최적화 lang="ko"로 변경
+    <html lang="ko" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider
           attribute="class"

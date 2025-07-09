@@ -40,17 +40,6 @@ export async function generateMetadata(
         },
       ],
     },
-    twitter: {
-      card: "summary_large_image",
-      title: post.title,
-      description: post.description,
-      images: [
-        {
-          url: post.coverImage || `${siteUrl}/opengraph-image.png`,
-          alt: post.title,
-        },
-      ],
-    },
   };
 }
 

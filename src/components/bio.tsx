@@ -1,7 +1,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { Github, Linkedin, Twitter } from 'lucide-react'
+import { Github, Linkedin, Instagram } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
 export function Bio() {
@@ -41,9 +41,9 @@ export function Bio() {
               <Linkedin className="h-5 w-5" />
             </Button>
           </Link>
-          <Link href="#" passHref>
-            <Button variant="ghost" size="icon" aria-label="Twitter">
-              <Twitter className="h-5 w-5" />
+          <Link href="https://instagram.com" passHref>
+            <Button variant="ghost" size="icon" aria-label="Instagram">
+              <Instagram className="h-5 w-5" />
             </Button>
           </Link>
         </div>
