@@ -19,7 +19,7 @@ interface PostCardProps {
 export default function PostCard({ post, categoryColor }: PostCardProps) {
 
   return (
-    <Card className={`group relative pt-0 overflow-hidden hover:shadow-xl transition-all duration-300 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${categoryColor ? `border-t-4 ${categoryColor}` : ''}`}>
+    <Card className={`group relative pt-0 overflow-hidden transition-all duration-300 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${categoryColor ? `border-t-4 ${categoryColor}` : ''}`}>
       <Link
         href={`/posts/${post.slug}`}
         className="absolute inset-0 z-10"
@@ -61,7 +61,7 @@ export default function PostCard({ post, categoryColor }: PostCardProps) {
             </div>
           )}
         </div>
-        <div className="group-hover:pr-8 transition-all duration-300">
+        <div className="pr-8 transition-all duration-300">
           <h2 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
             {post.title}
           </h2>
