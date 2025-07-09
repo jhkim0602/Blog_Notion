@@ -1,4 +1,3 @@
-
 import { getPost } from "@/lib/notion";
 import { format } from "date-fns";
 import Image from "next/image";
@@ -15,21 +14,18 @@ interface PostPageProps {
   params: Promise<{ slug: string }>;
 }
 
-type Props = {
-  params: {
-    slug: string;
-  };
-};
 
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
-  const { slug } = params;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
   const post = await getPost(slug);
 
   if (!post) {
-    return {
-      title: "포스트를 찾을 수 없습니다",
-      description: "요청하신 포스트를 찾을 수 없습니다.",
-    };
+    notFound(); // Add notFound() call for better error handling
   }
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-site.com";
@@ -53,7 +49,6 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     },
   };
 }
-
 
 export default async function PostPage({ params }: PostPageProps) {
   const { slug } = await params;
