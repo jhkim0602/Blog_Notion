@@ -120,7 +120,7 @@ export async function getPost(pageId: string): Promise<Post | null> {
     //posts는 Post 객체 배열 -> 블로그 메인, 목록 페이지등에서 사용
     const post: Post = {
       id: page.id,
-      title: properties.Title.title[0]?.plain_text || "Untitled",
+      title: properties.Title.title.map((t: any) => t.plain_text).join("") || "Untitled",
       slug: page.id,
       coverImage: properties["Featured Image"]?.url || undefined,
       description,
