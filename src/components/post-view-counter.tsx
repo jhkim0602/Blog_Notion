@@ -12,7 +12,7 @@ export default function PostViewCounter({ slug }: PostViewCounterProps) {
   useEffect(() => {
     if (!slug) return;
 
-    // 조회수 증가 API 호출
+    // 조회수 증가 API 호출 (POST 응답만 사용)
     fetch(`/api/views/${slug}`, { method: 'POST' })
       .then(res => res.json())
       .then(data => {
@@ -21,16 +21,6 @@ export default function PostViewCounter({ slug }: PostViewCounterProps) {
         }
       })
       .catch(err => console.error('Failed to increment view:', err));
-
-    // 초기 조회수 가져오기 (선택 사항, POST 응답에서 바로 받을 수도 있음)
-    fetch(`/api/views/${slug}`)
-      .then(res => res.json())
-      .then(data => {
-        if (data.views !== undefined) {
-          setViews(data.views);
-        }
-      })
-      .catch(err => console.error('Failed to fetch initial views:', err));
   }, [slug]);
 
   if (views === null) {

@@ -2,8 +2,7 @@ import { Client } from "@notionhq/client";
 import { NotionToMarkdown } from "notion-to-md";
 import { PageObjectResponse } from "@notionhq/client/";
 import { supabase } from "@/lib/supabase"; // Supabase 클라이언트 임포트
-
-console.log("NOTION_TOKEN:", process.env.NOTION_TOKEN);
+import { cache } from "react";
 
 export const notion = new Client({ auth: process.env.NOTION_TOKEN });
 export const n2m = new NotionToMarkdown({
@@ -94,8 +93,55 @@ export async function fetchPublishedPosts(): Promise<{ results: Post[] }> {
   return { results: allPosts.filter(Boolean) as Post[] }; // null 값 필터링 후 Post[]로 타입 단언
 }
 
-export async function getPost(pageId: string): Promise<Post | null> {
-  console.log("getPost called with pageId:", pageId); // 디버깅 로그
+// 목록용 요약 데이터: 콘텐츠 변환 없이 속성만 사용
+export async function fetchPublishedPostsSummary(): Promise<{ results: Post[] }> {
+  const posts = await notion.databases.query({
+    database_id: process.env.NOTION_DATABASE_ID!,
+    filter: {
+      and: [
+        {
+          property: "Status",
+          status: { equals: "Published" },
+        },
+      ],
+    },
+    sorts: [
+      { property: "Published Date", direction: "descending" },
+    ],
+  });
+
+  const mapped = await Promise.all(
+    posts.results.map(async (p: any) => {
+      const properties = p.properties as any;
+      const post: Post = {
+        id: p.id,
+        title: properties.Title?.title?.map((t: any) => t.plain_text).join("") || "Untitled",
+        slug: p.id,
+        coverImage: properties["Featured Image"]?.url || undefined,
+        description: "",
+        date: properties["Published Date"]?.date?.start || new Date().toISOString(),
+        content: "", // 목록에서는 사용하지 않음
+        author: properties.Author?.people?.[0]?.name,
+        tags: properties.Tags?.multi_select?.map((tag: any) => tag.name) || [],
+        category: properties.Category?.select?.name,
+      };
+
+      const { data, error } = await supabase
+        .from('PostView')
+        .select('views')
+        .eq('slug', post.slug)
+        .single();
+      if (error && error.code !== 'PGRST116') {
+        console.error('Error fetching post views from Supabase:', error);
+      }
+      return { ...post, views: data ? data.views : 0 };
+    })
+  );
+
+  return { results: mapped };
+}
+
+export const getPost = cache(async (pageId: string): Promise<Post | null> => {
   try {
     const page = (await notion.pages.retrieve.bind(notion.pages)({
       page_id: pageId,
@@ -137,4 +183,4 @@ export async function getPost(pageId: string): Promise<Post | null> {
     console.error("Error getting post:", error);
     return null;
   }
-}
+});

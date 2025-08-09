@@ -6,9 +6,18 @@ import { Metadata } from "next"; // Metadata는 서버 컴포넌트에서만 사
 import ReactMarkdown from "react-markdown";
 import { Badge } from "@/components/ui/badge";
 import { components } from "@/components/mdx-component";
+import { extractHeadings } from "@/lib/markdown";
 import remarkGfm from "remark-gfm";
+import remarkMath from "remark-math";
 import rehypeRaw from "rehype-raw";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
+import rehypeExternalLinks from "rehype-external-links";
+import rehypeKatex from "rehype-katex";
 import PostViewCounter from "@/components/post-view-counter"; // PostViewCounter 임포트
+import Toc from "@/components/toc";
+import ReadingProgress from "@/components/reading-progress";
+// import ScrollFollow from "@/components/scroll-follow";
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
@@ -85,13 +94,18 @@ export default async function PostPage({ params }: PostPageProps) {
     },
   };
 
+  // 서버에서 미리 헤딩 id를 계산해 클라이언트에서 안정적으로 감지되도록 함
+  const precomputedHeadings = extractHeadings(post.content);
+
   return (
     <>
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <article className="max-w-3xl mx-auto prose dark:prose-invert">
+      <ReadingProgress />
+      <div className="max-w-5xl mx-auto px-4 lg:pr-[300px]">
+        <article data-article className="prose dark:prose-invert max-w-none">
         {post.coverImage && (
           <div className="relative aspect-video w-full mb-8 rounded-lg overflow-hidden">
             <Image
@@ -132,13 +146,28 @@ export default async function PostPage({ params }: PostPageProps) {
         <div className="max-w-none">
           <ReactMarkdown
             components={components}
-            remarkPlugins={[remarkGfm]}
-            rehypePlugins={[rehypeRaw]}
+            remarkPlugins={[remarkGfm, remarkMath]}
+            rehypePlugins={[
+              rehypeRaw,
+              rehypeSlug,
+              [rehypeAutolinkHeadings, { behavior: "wrap" }],
+              [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
+              rehypeKatex,
+            ]}
           >
             {post.content}
           </ReactMarkdown>
         </div>
-      </article>
+        </article>
+      </div>
+      <div
+        className="hidden sm:block fixed top-1/2 -translate-y-1/2 z-[60] w-[260px]"
+        style={{ right: "min(16vw, 16rem)" }}
+      >
+        <div className="rounded-2xl border bg-background/80 backdrop-blur-xl p-4 ring-1 ring-black/5">
+          <Toc />
+        </div>
+      </div>
     </>
   );
 }

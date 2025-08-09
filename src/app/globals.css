@@ -118,19 +118,39 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
   }
 }
 
+/* 스크롤 추적 요소의 부드러운 그림자와 모션 힌트 */
+[data-toc-follower] {
+  filter: drop-shadow(0 10px 20px rgb(0 0 0 / 0.06));
+}
+
 .notion-aside {
-  background-color: #f0f0f0; /* Light gray background */
-  padding: 1rem;
-  border-left: 4px solid #3b82f6; /* Blue left border */
-  margin-bottom: 1rem;
-  border-radius: 0.25rem;
+  @apply bg-muted/60 p-4 border-l-4 border-blue-500 rounded-md mb-4;
 }
 
 .dark .notion-aside {
-  background-color: #2d3748; /* Darker gray for dark mode */
-  border-left-color: #60a5fa; /* Lighter blue for dark mode */
+  @apply border-blue-400;
 }
+
+/* Prose tweaks */
+.prose :where(h1,h2,h3){ @apply scroll-mt-24; }
+.prose :where(p){ @apply leading-8; }
+.prose :where(blockquote){ @apply border-l-4 border-muted-foreground/30 bg-muted/40 py-3 px-4 rounded-md; }
+.prose :where(code){ @apply text-[0.9em]; }
+.prose :where(pre){ @apply rounded-md border bg-muted/40 p-0; }
+.prose :where(pre>code){ @apply block p-4; }
+.prose :where(.shiki){ @apply bg-transparent; }
+.prose :where(.shiki code){ @apply grid; }
+.prose :where(.shiki code){ counter-reset: line; }
+.prose :where(.line){ counter-increment: line; }
+.prose :where(.line::before){ @apply text-muted-foreground/60 mr-4 inline-block w-6 select-none; content: counter(line); }
+.prose :where(table){ @apply w-full; }
+.prose :where(th,td){ @apply align-top; }
+.prose img { @apply rounded-md; }
+
+/* 자동 헤딩 링크 밑줄/색상 제어 */
+.prose :where(h1,h2,h3,h4) a{ @apply no-underline; text-decoration: none; color: inherit; }
+.prose :where(h1,h2,h3,h4) a:hover{ @apply no-underline; color: inherit; }

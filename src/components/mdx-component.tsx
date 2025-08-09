@@ -14,8 +14,8 @@ import { vscDarkPlus } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Badge } from "./ui/badge";
 
 const components = {
-  h1: ({ children }: { children?: React.ReactNode }) => (
-    <h1 className="mb-4 font-bold text-4xl">{children}</h1>
+  h1: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h1 {...props} className={cn("mb-4 font-bold text-4xl", className)}>{children}</h1>
   ),
   p: ({ children }: { children?: React.ReactNode }) => (
     <p className="-mb-1 leading-normal">{children}</p>
@@ -53,8 +53,9 @@ const components = {
         style={vscDarkPlus}
         language={match[1]}
         PreTag="div"
+        showLineNumbers
         {...props}
-        className="rounded-md [&>code]:bg-transparent [&>code]:p-2 [&>code]:rounded-md"
+        className="rounded-md [&>code]:bg-transparent [&>code]:p-2 [&>code]:rounded-md [&_.linenumber]:select-none"
       >
         {String(children).replace(/\n$/, "")}
       </SyntaxHighlighter>
@@ -83,20 +84,20 @@ const components = {
       />
     );
   },
-  h2: ({ children }: { children?: React.ReactNode }) => (
-    <h2 className="mb-2 font-bold text-2xl">{children}</h2>
+  h2: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h2 {...props} className={cn("mb-2 font-bold text-2xl", className)}>{children}</h2>
   ),
-  h3: ({ children }: { children?: React.ReactNode }) => (
-    <h3 className="mb-1 font-bold text-xl">{children}</h3>
+  h3: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h3 {...props} className={cn("mb-1 font-bold text-xl", className)}>{children}</h3>
   ),
-  h4: ({ children }: { children?: React.ReactNode }) => (
-    <h4 className="mb-1 font-bold text-lg">{children}</h4>
+  h4: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h4 {...props} className={cn("mb-1 font-bold text-lg", className)}>{children}</h4>
   ),
-  h5: ({ children }: { children?: React.ReactNode }) => (
-    <h5 className="mb-1 font-bold text-base">{children}</h5>
+  h5: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h5 {...props} className={cn("mb-1 font-bold text-base", className)}>{children}</h5>
   ),
-  h6: ({ children }: { children?: React.ReactNode }) => (
-    <h6 className="mb-1 font-bold text-sm">{children}</h6>
+  h6: ({ children, className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
+    <h6 {...props} className={cn("mb-1 font-bold text-sm", className)}>{children}</h6>
   ),
   table: ({ children }: { children?: React.ReactNode }) => (
     <Table className="rounded-md">{children}</Table>

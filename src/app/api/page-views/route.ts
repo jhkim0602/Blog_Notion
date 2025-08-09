@@ -23,13 +23,15 @@ export async function POST(request: Request) {
       pageViewCount = data;
 
       const newVisitorId = uuidv4(); // uuidv4() 사용
-      cookieStore.set(VISITOR_COOKIE_NAME, newVisitorId, {
+      const response = NextResponse.json({ totalViews: pageViewCount }, { status: 200 });
+      response.cookies.set(VISITOR_COOKIE_NAME, newVisitorId, {
         maxAge: COOKIE_EXPIRATION_SECONDS,
         path: '/',
         httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'lax',
       });
+      return response;
     } else {
       // 기존 방문자: 조회수 증가 없이 현재 값만 가져옴
       const { data, error } = await supabase
