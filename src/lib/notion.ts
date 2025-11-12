@@ -5,7 +5,18 @@ import { supabase } from "@/lib/supabase"; // Supabase 클라이언트 임포트
 import { cache } from "react";
 import { NotionAPI } from "notion-client";
 
-export const notion = new Client({ auth: process.env.NOTION_TOKEN });
+// 환경변수 검증
+if (!process.env.NOTION_TOKEN) {
+  throw new Error('NOTION_TOKEN is required');
+}
+if (!process.env.NOTION_DATABASE_ID) {
+  throw new Error('NOTION_DATABASE_ID is required');
+}
+
+export const notion = new Client({ 
+  auth: process.env.NOTION_TOKEN,
+  notionVersion: '2022-06-28'
+});
 export const notionClient = new NotionAPI();
 export const n2m = new NotionToMarkdown({
   notionClient: notion,

@@ -33,8 +33,10 @@ const nextConfig: NextConfig = {
     ];
   },
   // Edge runtime 최적화
-  webpack: (config: any) => {
-    config.externals = [...(config.externals || []), 'canvas', 'jsdom'];
+  webpack: (config: any, { isServer }: any) => {
+    if (isServer) {
+      config.externals = [...(config.externals || []), 'canvas', 'jsdom'];
+    }
     return config;
   },
 };
