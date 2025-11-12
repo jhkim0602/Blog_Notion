@@ -5,16 +5,18 @@ import { supabase } from "@/lib/supabase"; // Supabase 클라이언트 임포트
 import { cache } from "react";
 import { NotionAPI } from "notion-client";
 
-// 환경변수 검증
-if (!process.env.NOTION_TOKEN) {
-  throw new Error('NOTION_TOKEN is required');
-}
-if (!process.env.NOTION_DATABASE_ID) {
-  throw new Error('NOTION_DATABASE_ID is required');
+// 환경변수 검증 (빌드 시에만)
+if (typeof window === 'undefined' && process.env.NODE_ENV !== 'development') {
+  if (!process.env.NOTION_TOKEN) {
+    console.warn('Warning: NOTION_TOKEN is not set');
+  }
+  if (!process.env.NOTION_DATABASE_ID) {
+    console.warn('Warning: NOTION_DATABASE_ID is not set');
+  }
 }
 
 export const notion = new Client({ 
-  auth: process.env.NOTION_TOKEN,
+  auth: process.env.NOTION_TOKEN || '',
   notionVersion: '2022-06-28'
 });
 export const notionClient = new NotionAPI();
