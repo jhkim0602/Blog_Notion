@@ -1,31 +1,37 @@
 import Link from "next/link";
 import Image from "next/image";
 import { format } from "date-fns";
-import { Post } from "@/lib/notion";
-import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Clock, Calendar, ArrowUpRight, Eye } from "lucide-react";
+import { Post, getWordCount } from "@/lib/notion";
+import { Calendar, Clock } from "lucide-react";
 
 interface PostCardProps {
   post: Post;
-  categoryColor?: string;
+  featured?: boolean;
 }
 
-export default function PostCard({ post, categoryColor }: PostCardProps) {
+export default function PostCard({ post, featured = false }: PostCardProps) {
+  // 읽기 시간 계산 (분 단위)
+  const readingTime = Math.ceil(getWordCount(post.content) / 200);
 
   return (
-    <Card className={`group relative pt-0 overflow-hidden transition-all duration-300 bg-card/50 backdrop-blur supports-[backdrop-filter]:bg-background/60 ${categoryColor ? `border-t-4 ${categoryColor}` : ''}`}>
+    <article className="group relative border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden bg-white dark:bg-gray-900 hover:shadow-md transition-shadow duration-300">
       <Link
         href={`/posts/${post.slug}`}
         className="absolute inset-0 z-10"
         aria-label={post.title}
       />
-      <div className="relative aspect-[16/9] w-full overflow-hidden rounded-t-lg">
+      
+      {/* 추천 배지 */}
+      {featured && (
+        <div className="absolute top-3 right-3 z-20">
+          <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-medium">
+            추천
+          </span>
+        </div>
+      )}
+
+      {/* 이미지 */}
+      <div className="relative aspect-[16/9] w-full overflow-hidden">
         {post.coverImage ? (
           <Image
             src={post.coverImage}
@@ -34,57 +40,36 @@ export default function PostCard({ post, categoryColor }: PostCardProps) {
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (
-          <div className="absolute inset-0 bg-muted/80" />
-        )}
-        {post.category && (
-          <div className="absolute top-4 left-4 z-20">
-            <Badge
-              variant="secondary"
-              className="backdrop-blur-sm bg-background/80 shadow-sm"
-            >
-              {post.category}
-            </Badge>
-          </div>
+          <div className="w-full h-full bg-gray-100 dark:bg-gray-800" />
         )}
       </div>
-      <CardHeader className="space-y-2">
-        <div className="flex items-center gap-4 text-sm text-muted-foreground">
-          <div className="flex items-center gap-1.5">
-            <Calendar className="h-4 w-4" />
-            <span>{format(new Date(post.date), "MMM d, yyyy")}</span>
-          </div>
-          {/* 기존 readingTime 대신 조회수 표시 */}
-          {post.views !== undefined && (
-            <div className="flex items-center gap-1.5">
-              <Eye className="h-4 w-4" />
-              <span>{post.views} views</span>
-            </div>
-          )}
-        </div>
-        <div className="pr-8 transition-all duration-300">
-          <h2 className="text-xl font-semibold text-foreground group-hover:text-primary transition-colors">
-            {post.title}
-          </h2>
-          <ArrowUpRight className="absolute top-[7.5rem] right-6 h-6 w-6 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300 text-primary" />
-        </div>
-        <p className="text-muted-foreground line-clamp-2">{post.description}</p>
-      </CardHeader>
-      <CardContent>
-        {post.author && (
-          <p className="text-sm text-muted-foreground">By {post.author}</p>
+
+      {/* 컨텐츠 */}
+      <div className="p-6 space-y-3">
+        {/* 카테고리 */}
+        {post.category && (
+          <span className="text-sm text-pink-600 dark:text-pink-400 font-medium">
+            {post.category}
+          </span>
         )}
-      </CardContent>
-      {post.tags && post.tags.length > 0 && (
-        <CardFooter>
-          <div className="flex gap-2 flex-wrap">
-            {post.tags.map((tag) => (
-              <Badge key={tag} variant="outline" className="bg-background/80">
-                {tag}
-              </Badge>
-            ))}
+
+        {/* 제목 */}
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+          {post.title}
+        </h2>
+
+        {/* 날짜 및 읽기 시간 */}
+        <div className="flex items-center gap-4 text-sm text-gray-400 dark:text-gray-500">
+          <div className="flex items-center gap-1">
+            <Calendar className="h-4 w-4" />
+            <span>{format(new Date(post.date), "yyyy.MM.dd")}</span>
           </div>
-        </CardFooter>
-      )}
-    </Card>
+          <div className="flex items-center gap-1">
+            <Clock className="h-4 w-4" />
+            <span>{readingTime}분 읽기</span>
+          </div>
+        </div>
+      </div>
+    </article>
   );
 }

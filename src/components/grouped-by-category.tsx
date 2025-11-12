@@ -56,7 +56,6 @@ export default function GroupedByCategory({ posts }: GroupedByCategoryProps) {
               <PostCard
                 key={post.id}
                 post={post}
-                categoryColor={categoryColors[category] || categoryColors["Others"]}
               />
             ))}
           </div>

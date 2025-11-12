@@ -1,0 +1,16 @@
+{
+  "functions": {
+    "src/app/api/page-views/route.ts": {
+      "maxDuration": 10
+    },
+    "src/app/api/views/[slug]/route.ts": {
+      "maxDuration": 10
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/page-views",
+      "schedule": "0 */6 * * *"
+    }
+  ]
+}

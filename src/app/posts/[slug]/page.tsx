@@ -1,23 +1,17 @@
-import { getPost } from "@/lib/notion";
+import { getPost, getWordCount } from "@/lib/notion";
 import { format } from "date-fns";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { Metadata } from "next"; // Metadata는 서버 컴포넌트에서만 사용 가능하므로, generateMetadata 함수는 별도로 유지
-import ReactMarkdown from "react-markdown";
-import { Badge } from "@/components/ui/badge";
-import { components } from "@/components/mdx-component";
-import { extractHeadings } from "@/lib/markdown";
-import remarkGfm from "remark-gfm";
-import remarkMath from "remark-math";
-import rehypeRaw from "rehype-raw";
-import rehypeSlug from "rehype-slug";
-import rehypeAutolinkHeadings from "rehype-autolink-headings";
-import rehypeExternalLinks from "rehype-external-links";
-import rehypeKatex from "rehype-katex";
-import PostViewCounter from "@/components/post-view-counter"; // PostViewCounter 임포트
+import { Metadata } from "next";
+import NotionRendererWrapper from "@/components/notion-renderer";
+import "@/styles/notion.css";
+import "react-notion-x/src/styles.css";
+import "prismjs/themes/prism-tomorrow.css";
+import "katex/dist/katex.min.css";
+import PostViewCounter from "@/components/post-view-counter";
 import Toc from "@/components/toc";
-import ReadingProgress from "@/components/reading-progress";
-// import ScrollFollow from "@/components/scroll-follow";
+import Link from "next/link";
+import { Moon, Github } from "lucide-react";
 
 interface PostPageProps {
   params: Promise<{ slug: string }>;
@@ -95,7 +89,11 @@ export default async function PostPage({ params }: PostPageProps) {
   };
 
   // 서버에서 미리 헤딩 id를 계산해 클라이언트에서 안정적으로 감지되도록 함
-  const precomputedHeadings = extractHeadings(post.content);
+  const readingTime = Math.ceil(getWordCount(post.content) / 200);
+
+  if (!post.recordMap) {
+    return <div>Error: No content available</div>;
+  }
 
   return (
     <>
@@ -103,68 +101,59 @@ export default async function PostPage({ params }: PostPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      <ReadingProgress />
+      
       <div className="max-w-5xl mx-auto px-4 lg:pr-[300px]">
-        <article data-article className="prose dark:prose-invert max-w-none">
-        {post.coverImage && (
-          <div className="relative aspect-video w-full mb-8 rounded-lg overflow-hidden">
-            <Image
-              src={post.coverImage}
-              alt={post.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
+        <article data-article className="notion-page max-w-none">
+          {post.coverImage && (
+            <div className="relative aspect-video w-full mb-8 rounded-lg overflow-hidden">
+              <Image
+                src={post.coverImage}
+                alt={post.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
 
-        <header className="mb-8">
-          <div className="flex items-center gap-4 text-muted-foreground mb-4">
-            <time>{format(new Date(post.date), "MMMM d, yyyy")}</time>
-            {post.author && <span>By {post.author}</span>}
-            <span className="text-sm">•</span>
-            <PostViewCounter slug={slug} />
-          </div>
+          <header className="mb-8">
+            <div className="flex items-center gap-4 text-muted-foreground mb-4">
+              <time>{format(new Date(post.date), "MMMM d, yyyy")}</time>
+              {post.author && <span>By {post.author}</span>}
+              <span className="text-sm">•</span>
+              <PostViewCounter slug={slug} />
+              <span>•</span>
+              <span>{readingTime}분 읽기</span>
+            </div>
 
-          <h1 className="text-4xl font-bold mb-4 text-foreground">
-            {post.title}
-          </h1>
+            <h1 className="text-4xl font-bold mb-4 text-foreground">
+              {post.title}
+            </h1>
 
-          <div className="flex gap-4 mb-4">
             {post.category && (
-              <Badge variant="secondary">{post.category}</Badge>
+              <div className="flex gap-4 mb-4">
+                <span className="text-pink-600 dark:text-pink-400 text-sm">
+                  {post.category}
+                </span>
+              </div>
             )}
-            {post.tags &&
-              post.tags.map((tag) => (
-                <Badge key={tag} variant="outline">
-                  {tag}
-                </Badge>
-              ))}
-          </div>
-        </header>
+          </header>
 
-        <div className="max-w-none">
-          <ReactMarkdown
-            components={components}
-            remarkPlugins={[remarkGfm, remarkMath]}
-            rehypePlugins={[
-              rehypeRaw,
-              rehypeSlug,
-              [rehypeAutolinkHeadings, { behavior: "wrap" }],
-              [rehypeExternalLinks, { target: "_blank", rel: ["noopener", "noreferrer"] }],
-              rehypeKatex,
-            ]}
-          >
-            {post.content}
-          </ReactMarkdown>
-        </div>
+          <div className="notion-page-content max-w-none">
+            <NotionRendererWrapper recordMap={post.recordMap} />
+          </div>
         </article>
       </div>
+      
+      {/* TOC - Sticky sidebar for desktop */}
       <div
-        className="hidden sm:block fixed top-1/2 -translate-y-1/2 z-[60] w-[260px]"
-        style={{ right: "min(16vw, 16rem)" }}
+        className="hidden lg:block fixed z-10 w-[240px]"
+        style={{ 
+          top: "200px",
+          right: "max(32px, calc((100vw - 1280px) / 2))"
+        }}
       >
-        <div className="rounded-2xl border bg-background/80 backdrop-blur-xl p-4 ring-1 ring-black/5">
+        <div className="sticky top-24">
           <Toc />
         </div>
       </div>

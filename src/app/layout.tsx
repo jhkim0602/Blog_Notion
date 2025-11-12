@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import "@/styles/notion.css";
 import Layout from "@/components/layout";
 import { ThemeProvider } from "@/components/theme-provider";
 import "katex/dist/katex.min.css";

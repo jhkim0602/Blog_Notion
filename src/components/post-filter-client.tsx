@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Post } from "@/lib/notion";
 import PostCard from "@/components/post-card";
 import GroupedByCategory from "@/components/grouped-by-category";
@@ -18,57 +18,106 @@ const tabs = [
 ];
 
 export default function PostFilterClient({ posts }: PostFilterClientProps) {
-  const [activeTab, setActiveTab] = useState<"all" | "category" | "tag">("all");
+  const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [mounted, setMounted] = useState(false);
+  
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+  
+  // 카테고리별 포스트 수 계산 (memoization으로 안정화)
+  const categoryStats = useMemo(() => {
+    return posts.reduce((acc, post) => {
+      const category = post.category || "기타";
+      acc[category] = (acc[category] || 0) + 1;
+      return acc;
+    }, {} as Record<string, number>);
+  }, [posts]);
+  
+  // 카테고리 목록을 안정화
+  const sortedCategories = useMemo(() => {
+    return Object.entries(categoryStats).sort(([a], [b]) => a.localeCompare(b, 'ko'));
+  }, [categoryStats]);
+  
+  const allCount = posts.length;
+  
+  // 카테고리 필터링
+  const filteredPosts = useMemo(() => {
+    return activeCategory === "all" 
+      ? posts 
+      : posts.filter(post => (post.category || "기타") === activeCategory);
+  }, [posts, activeCategory]);
+
+  // hydration 완료 전에는 로딩 상태 표시
+  if (!mounted) {
+    return (
+      <div className="mb-8">
+        <div className="flex items-center mb-4">
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-4">Category</span>
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <div className="px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 dark:bg-gray-800 animate-pulse">
+            Loading...
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
-      <div className="flex justify-center border-b border-gray-200 dark:border-gray-700 mb-12">
-        <div className="flex space-x-2">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id as any)}
-              className={`relative py-3 px-4 text-md font-medium transition-colors duration-300 focus:outline-none ${
-                activeTab === tab.id
-                  ? "text-primary"
-                  : "text-muted-foreground hover:text-primary/80"
-              }`}
-            >
-              {tab.label}
-              {activeTab === tab.id && (
-                <motion.div
-                  layoutId="underline"
-                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
-            </button>
-          ))}
+      {/* Category Filter */}
+      <div className="mb-8">
+        <div className="flex items-center mb-4">
+          <span className="text-sm font-medium text-gray-700 dark:text-gray-300 mr-4">Category</span>
+        </div>
+        <div className="flex flex-row gap-2 h-10 items-center flex-wrap">
+          <button
+            onClick={() => setActiveCategory("all")}
+            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors border h-7 ${
+              activeCategory === "all"
+                ? "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white"
+                : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700"
+            }`}
+          >
+            All ({allCount})
+          </button>
+          
+          {sortedCategories.map(([category, count]) => (
+              <button
+                key={category}
+                onClick={() => setActiveCategory(category)}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors border h-7 ${
+                  activeCategory === category
+                    ? "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white"
+                    : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700"
+                }`}
+              >
+                {category === "기타" ? "🔥" : ""}{category} ({count})
+              </button>
+            ))}
         </div>
       </div>
 
-      <AnimatePresence mode="wait">
-        {activeTab === "all" && (
-          <motion.div
-            key="all"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {posts.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-          </motion.div>
-        )}
-        {activeTab === "category" && (
-          <GroupedByCategory key="category" posts={posts} />
-        )}
-        {activeTab === "tag" && (
-          <GroupedByTag key="tag" posts={posts} />
-        )}
-      </AnimatePresence>
+      {/* Posts Grid */}
+      <motion.div
+        key={activeCategory}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.3 }}
+        className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+      >
+        {filteredPosts.map((post) => (
+          <PostCard key={post.id} post={post} />
+        ))}
+      </motion.div>
+      
+      {filteredPosts.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-gray-500 dark:text-gray-400">해당 카테고리에 포스트가 없습니다.</p>
+        </div>
+      )}
     </>
   );
 }

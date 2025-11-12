@@ -19,7 +19,7 @@ export default function Toc() {
 
     const collect = () => {
       const all = Array.from(
-        article.querySelectorAll<HTMLElement>("h1, h2, h3, h4, h5, h6")
+        article.querySelectorAll<HTMLElement>("h2, h3, h4, h5, h6")
       );
 
       // 아이디가 없는 헤딩은 텍스트로 슬러그를 생성해 부여 (안정적 TOC)
@@ -70,20 +70,29 @@ export default function Toc() {
   if (items.length === 0) return null;
 
   return (
-    <nav aria-label="Table of contents" className="text-sm">
-      <ul className="space-y-1 relative">
-        <div aria-hidden className="pointer-events-none absolute left-0 top-0 bottom-0 w-px bg-border" />
-        {items.map((h) => (
-          <li key={h.id} className={"truncate"}>
+    <nav aria-label="Table of contents" className="w-full pl-4 border-l border-gray-200 dark:border-gray-800">
+      {/* Header */}
+      <h2 className="text-sm font-bold text-gray-700 dark:text-gray-300 uppercase tracking-wide mb-4">
+        on this page
+      </h2>
+      
+      {/* Items List */}
+      <ul className="space-y-1">
+        {items.map((h: HeadingItem) => (
+          <li key={h.id}>
             <a
               href={`#${h.id}`}
               className={
-                "group relative block truncate pl-3 py-1 rounded-md transition-colors " +
+                "block text-sm transition-colors duration-200 " +
                 (activeId === h.id
-                  ? "text-foreground bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-muted/60")
+                  ? "text-blue-600 dark:text-blue-400 font-medium"
+                  : "text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300")
               }
-              style={{ paddingLeft: (h.level - 1) * 12 }}
+              style={{ 
+                paddingLeft: h.level === 2 ? "0px" : h.level === 3 ? "12px" : `${(h.level - 2) * 12}px`,
+                paddingTop: "4px",
+                paddingBottom: "4px"
+              }}
               onClick={(e) => {
                 e.preventDefault();
                 const el = document.getElementById(h.id);
@@ -93,10 +102,7 @@ export default function Toc() {
                 history.replaceState(null, "", `#${h.id}`);
               }}
             >
-              <span className="relative z-10">{h.text}</span>
-              {activeId === h.id && (
-                <span className="absolute left-0 top-1/2 -translate-y-1/2 h-6 w-1 bg-primary rounded-full" />
-              )}
+              {h.text}
             </a>
           </li>
         ))}
