@@ -309,3 +309,28 @@
 .notion-page .notion-header .notion-h1 {
   margin-top: 0;
 }
+
+/* 노션 속성/메타데이터 숨기기 */
+.notion-collection-row,
+.notion-page-properties,
+.notion-property,
+.notion-property-title,
+.notion-property-text,
+.notion-property-select,
+.notion-property-multi-select,
+.notion-property-date,
+.notion-property-person,
+.notion-property-file,
+.notion-property-checkbox,
+.notion-property-url,
+.notion-property-email,
+.notion-property-phone,
+.notion-property-formula,
+.notion-property-relation,
+.notion-property-rollup,
+.notion-property-created-time,
+.notion-property-created-by,
+.notion-property-last-edited-time,
+.notion-property-last-edited-by {
+  display: none !important;
+}
