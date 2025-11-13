@@ -68,19 +68,17 @@ export default function AboutPage() {
                   프리랜서
                 </a>
               </h3>
-              <span className="text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">2023 - Present</span>
+              <span className="text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+                2023 - Present
+              </span>
             </div>
             <p className="text-gray-600 dark:text-gray-400 mb-4 font-medium">
-              풀스택 개발자
+              풀스택 개발자를 희망합니다...
             </p>
             <ul className="space-y-2">
               <li className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2">
                 <span className="text-blue-500 font-bold mt-1">•</span>
-                <span>Notion API를 활용한 개인 블로그 개발 및 운영</span>
-              </li>
-              <li className="text-sm text-gray-600 dark:text-gray-400 flex items-start gap-2">
-                <span className="text-blue-500 font-bold mt-1">•</span>
-                <span>Next.js와 TypeScript를 사용한 현대적인 웹 애플리케이션 구축</span>
+                <span>아직 학생 입니다! (2027년에... 학사 취득 예정)</span>
               </li>
             </ul>
           </div>
@@ -98,14 +96,14 @@ export default function AboutPage() {
                   href="#"
                   className="text-blue-600 dark:text-blue-400 hover:underline"
                 >
-                  컴퓨터공학과
+                  컴퓨터 소프트웨어학과
                 </a>
               </h3>
-              <span className="text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">2021 - Present</span>
+              <span className="text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+                2021 - Present
+              </span>
             </div>
-            <p className="text-gray-600 dark:text-gray-400">
-              자료구조, 알고리즘, 운영체제, 네트워크 등 기초 지식 학습
-            </p>
+            <p className="text-gray-600 dark:text-gray-400">부천대학교</p>
           </div>
         </section>
 
@@ -117,17 +115,11 @@ export default function AboutPage() {
           <div className="bg-white dark:bg-gray-900 rounded-xl border border-gray-200 dark:border-gray-700 p-6 shadow-sm">
             <div className="space-y-6">
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Backend</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                  Backend
+                </h3>
                 <div className="flex flex-wrap gap-2">
-                  {[
-                    "Java",
-                    "Spring Boot",
-                    "Node.js",
-                    "Python",
-                    "MySQL",
-                    "PostgreSQL",
-                    "Redis",
-                  ].map((skill) => (
+                  {["이것저것... 다합니다. 백엔드를 잘합니다."].map((skill) => (
                     <span
                       key={skill}
                       className="px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-sm text-gray-700 dark:text-gray-300"
@@ -138,7 +130,9 @@ export default function AboutPage() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">Frontend</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                  Frontend
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {[
                     "JavaScript",
@@ -157,7 +151,9 @@ export default function AboutPage() {
                 </div>
               </div>
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">DevOps & Tools</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-gray-100">
+                  DevOps & Tools
+                </h3>
                 <div className="flex flex-wrap gap-2">
                   {["Docker", "AWS", "Git", "GitHub Actions"].map((skill) => (
                     <span
@@ -192,7 +188,9 @@ export default function AboutPage() {
                   </h3>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">Active</span>
+                    <span className="text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+                      Active
+                    </span>
                   </div>
                 </div>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
@@ -223,11 +221,14 @@ export default function AboutPage() {
                   </h3>
                   <div className="flex items-center gap-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <span className="text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">Active</span>
+                    <span className="text-sm text-gray-500 bg-gray-100 dark:bg-gray-800 px-3 py-1 rounded-full">
+                      Active
+                    </span>
                   </div>
                 </div>
                 <p className="text-gray-600 dark:text-gray-400 mb-4">
-                  백준, 프로그래머스 등을 통한 지속적인 문제 해결 능력 향상
+                  백준, 프로그래머스 등을 통한 지속적인 문제 해결 능력 향상을
+                  위해 열심히 풀고있습니다.
                 </p>
                 <div className="flex flex-wrap gap-2">
                   <span className="px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded-full text-sm">

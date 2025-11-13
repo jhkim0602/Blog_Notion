@@ -102,7 +102,7 @@ export default async function PostPage({ params }: PostPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       
-      <div className="max-w-5xl mx-auto px-4 lg:pr-[300px]">
+      <div className="w-full max-w-5xl mx-auto px-3 sm:px-5 md:px-8 xl:pr-[300px]">
         <article data-article className="notion-page max-w-none">
           {post.coverImage && (
             <div className="relative aspect-video w-full mb-8 rounded-lg overflow-hidden">
