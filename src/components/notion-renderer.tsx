@@ -3,6 +3,7 @@
 import { NotionRenderer } from "react-notion-x";
 import dynamic from "next/dynamic";
 import { ExtendedRecordMap } from "notion-types";
+import { defaultMapImageUrl } from "notion-utils";
 
 // Dynamic imports for better performance
 const Code = dynamic(() =>
@@ -40,7 +41,7 @@ export default function NotionRendererWrapper({ recordMap }: NotionRendererWrapp
         Modal,
       }}
       mapPageUrl={(pageId) => `/posts/${pageId}`}
-      mapImageUrl={(url, block) => url}
+      mapImageUrl={(url, block) => defaultMapImageUrl(url, block)}
       showCollectionViewDropdown={false}
       showTableOfContents={false}
       minTableOfContentsItems={3}
