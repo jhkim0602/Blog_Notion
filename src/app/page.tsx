@@ -2,7 +2,6 @@ import { fetchPublishedPostsSummary as fetchPublishedPosts, Post } from "@/lib/n
 import PostFilterClient from "@/components/post-filter-client";
 import { Bio } from "@/components/bio";
 import TagCloudSection from "@/components/tag-cloud-section";
-import TargetCursor from "@/components/TargetCursor";
 
 async function getPosts(): Promise<Post[]> {
   const posts = await fetchPublishedPosts();
@@ -15,7 +14,6 @@ export default async function Home() {
 
   return (
     <>
-      <TargetCursor targetSelector=".cursor-target" hoverDuration={0.25} />
       <div className="container max-w-6xl mx-auto px-4 py-8">
         <Bio />
         

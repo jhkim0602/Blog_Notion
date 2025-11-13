@@ -2,7 +2,6 @@
 
 import { useState, useMemo } from "react";
 import { Post, getWordCount } from "@/lib/notion";
-import { format } from "date-fns";
 import Link from "next/link";
 import { Clock } from "lucide-react";
 import TextType from "@/components/TextType";
@@ -13,7 +12,17 @@ interface TagCloudSectionProps {
 }
 
 export default function TagCloudSection({ posts }: TagCloudSectionProps) {
-  const [selectedTag, setSelectedTag] = useState<string | null>(null);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const dateFormatter = useMemo(
+    () =>
+      new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        timeZone: "UTC",
+      }),
+    []
+  );
 
   // 모든 태그 수집 및 빈도 계산
   const tagStats = useMemo(() => {
@@ -28,13 +37,22 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
     return tagMap;
   }, [posts]);
 
-  // 선택된 태그의 포스트 필터링
+  const toggleTag = (tag: string) => {
+    setSelectedTags(prev =>
+      prev.includes(tag) ? prev.filter(t => t !== tag) : [...prev, tag]
+    );
+  };
+
+  const clearSelectedTags = () => setSelectedTags([]);
+
+  // 선택된 태그 조합으로 포스트 필터링 (선택된 태그 중 하나라도 포함하면 표시)
   const filteredPosts = useMemo(() => {
-    if (!selectedTag) return [];
-    return posts.filter(post => 
-      post.tags?.includes(selectedTag)
-    ); // 모든 포스트 반환 (스크롤로 보기)
-  }, [posts, selectedTag]);
+    if (selectedTags.length === 0) return [];
+    return posts.filter(post => {
+      if (!post.tags || post.tags.length === 0) return false;
+      return post.tags.some(tag => selectedTags.includes(tag));
+    });
+  }, [posts, selectedTags]);
 
   // 태그 클라우드 색상 배열
   const colors = [
@@ -66,12 +84,13 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
             {Array.from(tagStats.entries()).map(([tag, count], index) => (
               <AnimatedListItem key={tag} index={index} delay={index * 0.05} className="flex-shrink-0">
                 <button
-                  onClick={() => setSelectedTag(tag)}
+                  type="button"
+                  onClick={() => toggleTag(tag)}
                   className={`
                     cursor-target
                     ${getTagSize(count)} 
                     ${colors[index % colors.length]}
-                    ${selectedTag === tag ? 'ring-2 ring-blue-500' : ''}
+                    ${selectedTags.includes(tag) ? 'ring-2 ring-blue-500' : ''}
                     rounded-full font-medium transition-all duration-200 
                     transform hover:scale-105 hover:shadow-md
                     animate-pulse
@@ -93,12 +112,19 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
       {/* 태그별 포스트 리스트 박스 */}
       <div className="flex-1 bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
         <h2 className="text-xl font-semibold mb-6 text-gray-900 dark:text-gray-100">
-          {selectedTag ? `"${selectedTag}" 태그 포스트` : '태그를 선택해주세요'}
+          {selectedTags.length > 0 ? `"${selectedTags.join('", "')}" 태그 조합 포스트` : '태그를 선택해주세요'}
         </h2>
-        
-        {selectedTag ? (
+
+        {selectedTags.length > 0 ? (
           <div className="relative h-[300px]">
-            <div className="scroll-fade-mask h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+            <button
+              type="button"
+              className="absolute right-3 top-0 text-xs text-gray-500 dark:text-gray-400 underline cursor-pointer"
+              onClick={clearSelectedTags}
+            >
+              초기화
+            </button>
+            <div className="scroll-fade-mask h-full overflow-y-auto pl-1 pr-3 sm:pr-4 pt-6 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
               <div className="space-y-4 py-4">
               {filteredPosts.map((post, index) => {
                 const readingTime = Math.ceil(getWordCount(post.content) / 200);
@@ -127,7 +153,7 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
                         
                         {/* 날짜 + 읽기 시간 */}
                         <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                          <time>{format(new Date(post.date), "MMM d, yyyy")}</time>
+                          <time>{dateFormatter.format(new Date(post.date))}</time>
                           <span>•</span>
                           <div className="flex items-center gap-1">
                             <Clock className="w-3 h-3" />
@@ -157,7 +183,7 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
             <TextType
               as="p"
               className="text-gray-500 dark:text-gray-400 text-center"
-              text={"왼쪽에서 태그를 클릭하면\n해당 태그의 포스트들을 확인할 수 있습니다."}
+              text={"왼쪽 태그를 여러 개 조합해 클릭하면\n해당 태그들을 포함한 글 목록을 볼 수 있어요."}
               typingSpeed={42}
               pauseDuration={2500}
               loop={false}
