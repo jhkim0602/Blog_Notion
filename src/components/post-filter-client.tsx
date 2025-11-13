@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useLayoutEffect, useRef } from "react";
 import { Post } from "@/lib/notion";
 import PostCard from "@/components/post-card";
-import GroupedByCategory from "@/components/grouped-by-category";
-import GroupedByTag from "@/components/grouped-by-tag";
-import { motion, AnimatePresence } from "framer-motion";
+import { gsap } from "gsap";
 
 interface PostFilterClientProps {
   posts: Post[];
@@ -20,6 +18,7 @@ const tabs = [
 export default function PostFilterClient({ posts }: PostFilterClientProps) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [mounted, setMounted] = useState(false);
+  const cardsContainerRef = useRef<HTMLDivElement | null>(null);
   
   useEffect(() => {
     setMounted(true);
@@ -48,6 +47,25 @@ export default function PostFilterClient({ posts }: PostFilterClientProps) {
       : posts.filter(post => (post.category || "기타") === activeCategory);
   }, [posts, activeCategory]);
 
+  useLayoutEffect(() => {
+    if (!mounted) return;
+    if (!cardsContainerRef.current) return;
+
+    const ctx = gsap.context(() => {
+      const cards = gsap.utils.toArray<HTMLElement>("[data-post-card]");
+      gsap.set(cards, { opacity: 0, y: 40 });
+      gsap.to(cards, {
+        opacity: 1,
+        y: 0,
+        duration: 0.55,
+        ease: "power3.out",
+        stagger: 0.08,
+      });
+    }, cardsContainerRef);
+
+    return () => ctx.revert();
+  }, [filteredPosts, mounted]);
+
   // hydration 완료 전에는 로딩 상태 표시
   if (!mounted) {
     return (
@@ -74,7 +92,7 @@ export default function PostFilterClient({ posts }: PostFilterClientProps) {
         <div className="flex flex-row gap-2 h-10 items-center flex-wrap">
           <button
             onClick={() => setActiveCategory("all")}
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors border h-7 ${
+            className={`cursor-target px-3 py-1 rounded-md text-sm font-medium transition-colors border h-7 ${
               activeCategory === "all"
                 ? "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white"
                 : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700"
@@ -87,7 +105,7 @@ export default function PostFilterClient({ posts }: PostFilterClientProps) {
               <button
                 key={category}
                 onClick={() => setActiveCategory(category)}
-                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors border h-7 ${
+                className={`cursor-target px-3 py-1 rounded-md text-sm font-medium transition-colors border h-7 ${
                   activeCategory === category
                     ? "bg-black text-white border-black dark:bg-white dark:text-black dark:border-white"
                     : "bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-700 dark:hover:bg-gray-700"
@@ -100,18 +118,13 @@ export default function PostFilterClient({ posts }: PostFilterClientProps) {
       </div>
 
       {/* Posts Grid */}
-      <motion.div
-        key={activeCategory}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.3 }}
-        className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-      >
+      <div ref={cardsContainerRef} className="container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredPosts.map((post) => (
-          <PostCard key={post.id} post={post} />
+          <div key={post.id} data-post-card className="cursor-target will-change-[transform,opacity]">
+            <PostCard post={post} />
+          </div>
         ))}
-      </motion.div>
+      </div>
       
       {filteredPosts.length === 0 && (
         <div className="text-center py-12">

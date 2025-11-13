@@ -5,6 +5,8 @@ import { Post, getWordCount } from "@/lib/notion";
 import { format } from "date-fns";
 import Link from "next/link";
 import { Clock } from "lucide-react";
+import TextType from "@/components/TextType";
+import { AnimatedListItem } from "@/components/AnimatedList";
 
 interface TagCloudSectionProps {
   posts: Post[];
@@ -62,25 +64,27 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
         <div className="relative min-h-[200px]">
           <div className="flex flex-wrap gap-3 items-center justify-center">
             {Array.from(tagStats.entries()).map(([tag, count], index) => (
-              <button
-                key={tag}
-                onClick={() => setSelectedTag(tag)}
-                className={`
-                  ${getTagSize(count)} 
-                  ${colors[index % colors.length]}
-                  ${selectedTag === tag ? 'ring-2 ring-blue-500' : ''}
-                  rounded-full font-medium transition-all duration-200 
-                  transform hover:scale-105 hover:shadow-md
-                  animate-pulse
-                `}
-                style={{
-                  animationDelay: `${index * 0.1}s`,
-                  animationDuration: '2s',
-                  animationIterationCount: 'infinite'
-                }}
-              >
-                {tag} ({count})
-              </button>
+              <AnimatedListItem key={tag} index={index} delay={index * 0.05} className="flex-shrink-0">
+                <button
+                  onClick={() => setSelectedTag(tag)}
+                  className={`
+                    cursor-target
+                    ${getTagSize(count)} 
+                    ${colors[index % colors.length]}
+                    ${selectedTag === tag ? 'ring-2 ring-blue-500' : ''}
+                    rounded-full font-medium transition-all duration-200 
+                    transform hover:scale-105 hover:shadow-md
+                    animate-pulse
+                  `}
+                  style={{
+                    animationDelay: `${index * 0.1}s`,
+                    animationDuration: '2s',
+                    animationIterationCount: 'infinite'
+                  }}
+                >
+                  {tag} ({count})
+                </button>
+              </AnimatedListItem>
             ))}
           </div>
         </div>
@@ -93,9 +97,10 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
         </h2>
         
         {selectedTag ? (
-          <div className="h-[300px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
-            <div className="space-y-3 pr-2">
-              {filteredPosts.map((post) => {
+          <div className="relative h-[300px]">
+            <div className="scroll-fade-mask h-full overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-gray-300 dark:scrollbar-thumb-gray-600 scrollbar-track-transparent">
+              <div className="space-y-4 py-4">
+              {filteredPosts.map((post, index) => {
                 const readingTime = Math.ceil(getWordCount(post.content) / 200);
                 const getCategoryColor = (category: string) => {
                   // 배경 제거, 핑크 텍스트만 표시
@@ -103,37 +108,35 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
                 };
 
                 return (
-                  <Link
-                    key={post.id}
-                    href={`/posts/${post.slug}`}
-                    className="block group"
-                  >
-                    <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-5 py-4 transition-all duration-200 hover:shadow-sm">
-                      {/* 카테고리 라벨 */}
-                      {post.category && (
-                        <div className="mb-1">
-                          <span className={`text-xs font-semibold ${getCategoryColor(post.category)}`}>
-                            {post.category}
-                          </span>
-                        </div>
-                      )}
-                      
-                      {/* 제목 */}
-                      <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-2 mb-3 transition-colors">
-                        {post.title}
-                      </h3>
-                      
-                      {/* 날짜 + 읽기 시간 */}
-                      <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                        <time>{format(new Date(post.date), "MMM d, yyyy")}</time>
-                        <span>•</span>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          <span>{readingTime}분</span>
+                  <AnimatedListItem key={post.id} index={index} delay={index * 0.05}>
+                    <Link href={`/posts/${post.slug}`} className="block group cursor-target">
+                      <div className="bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 px-5 py-4 transition-all duration-200 hover:shadow-sm">
+                        {/* 카테고리 라벨 */}
+                        {post.category && (
+                          <div className="mb-1">
+                            <span className={`text-xs font-semibold ${getCategoryColor(post.category)}`}>
+                              {post.category}
+                            </span>
+                          </div>
+                        )}
+                        
+                        {/* 제목 */}
+                        <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-2 mb-3 transition-colors">
+                          {post.title}
+                        </h3>
+                        
+                        {/* 날짜 + 읽기 시간 */}
+                        <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                          <time>{format(new Date(post.date), "MMM d, yyyy")}</time>
+                          <span>•</span>
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            <span>{readingTime}분</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  </Link>
+                    </Link>
+                  </AnimatedListItem>
                 );
               })}
               
@@ -144,13 +147,21 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
                   </p>
                 </div>
               )}
+              </div>
             </div>
+            <div className="pointer-events-none absolute inset-x-2 top-0 h-10 bg-gradient-to-b from-gray-50 dark:from-gray-900 to-transparent" />
+            <div className="pointer-events-none absolute inset-x-2 bottom-0 h-10 bg-gradient-to-t from-gray-50 dark:from-gray-900 to-transparent" />
           </div>
         ) : (
           <div className="flex items-center justify-center h-32">
-            <p className="text-gray-500 dark:text-gray-400 text-center">
-              왼쪽에서 태그를 클릭하면<br />해당 태그의 포스트들을 확인할 수 있습니다.
-            </p>
+            <TextType
+              as="p"
+              className="text-gray-500 dark:text-gray-400 text-center"
+              text={"왼쪽에서 태그를 클릭하면\n해당 태그의 포스트들을 확인할 수 있습니다."}
+              typingSpeed={42}
+              pauseDuration={2500}
+              loop={false}
+            />
           </div>
         )}
       </div>

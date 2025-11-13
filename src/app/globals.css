@@ -126,3 +126,61 @@
 [data-toc-follower] {
   filter: drop-shadow(0 10px 20px rgb(0 0 0 / 0.06));
 }
+
+@layer utilities {
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  .animate-gradient {
+    animation: gradient 8s linear infinite;
+    background-size: 300% 100%;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .skeleton-shimmer {
+    position: absolute;
+    inset: 0;
+    display: block;
+    background-image: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in oklch, var(--color-foreground) 35%, transparent),
+      transparent
+    );
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+
+  .scroll-fade-mask {
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      #000 25px,
+      #000 calc(100% - 25px),
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      #000 25px,
+      #000 calc(100% - 25px),
+      transparent 100%
+    );
+  }
+}

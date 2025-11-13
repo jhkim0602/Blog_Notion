@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import GradientText from "@/components/GradientText";
 import { ModeToggle } from "@/components/mode-toggle";
 import PageViews from "@/components/page-views"; // PageViews 컴포넌트 임포트
 
@@ -11,10 +12,7 @@ export default function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16">
           <div className="flex items-center gap-8">
-            <Link
-              href="/"
-              className="flex items-center gap-3 text-xl font-bold text-foreground"
-            >
+            <Link href="/" className="flex items-center gap-3 text-xl font-bold">
               <Image
                 src="/my-avatar.png"
                 alt="Profile Avatar"
@@ -22,7 +20,9 @@ export default function Header() {
                 height={32}
                 className="rounded-full border border-primary/30"
               />
-              KJH's Dev Log
+              <GradientText className="mx-0 inline-flex rounded-none bg-transparent p-0 font-bold text-xl">
+                KJH's Dev Log
+              </GradientText>
             </Link>
             <Link
               href="/about"
