@@ -85,7 +85,7 @@ export default function BubbleMenu({
   const [showOverlay, setShowOverlay] = useState(false);
 
   const overlayRef = useRef<HTMLDivElement>(null);
-  const bubblesRef = useRef<HTMLAnchorElement[]>([]);
+  const bubblesRef = useRef<(HTMLAnchorElement | HTMLButtonElement)[]>([]);
   const labelRefs = useRef<HTMLSpanElement[]>([]);
 
   const menuItems = items?.length ? items : DEFAULT_ITEMS;

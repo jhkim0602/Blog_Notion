@@ -130,7 +130,7 @@ const components = {
     );
   },
 
-  pre: ({ className, ...props }: React.HTMLAttributes<HTMLPreElement>) => {
+  pre: ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => {
     return <div className={cn("mb-6", className)} {...props} />;
   },
 
