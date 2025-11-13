@@ -237,24 +237,38 @@ export const getPost = cache(async (pageId: string): Promise<Post | null> => {
       return null;
     }
     
-    // react-notion-x를 위한 recordMap 가져오기 (에러 처리 포함)
+    // react-notion-x를 위한 recordMap 가져오기 (재시도 로직 포함)
     let recordMap;
-    try {
-      // console 경고를 임시로 억제
-      const originalConsoleWarn = console.warn;
-      console.warn = (...args) => {
-        if (!args[0]?.toString().includes('missing user')) {
-          originalConsoleWarn(...args);
+    const maxRetries = 3;
+    
+    for (let attempt = 1; attempt <= maxRetries; attempt++) {
+      try {
+        // console 경고를 임시로 억제
+        const originalConsoleWarn = console.warn;
+        console.warn = (...args: any[]) => {
+          if (!args[0]?.toString().includes('missing user')) {
+            originalConsoleWarn(...args);
+          }
+        };
+        
+        recordMap = await notionClient.getPage(pageId);
+        
+        // 원래 console.warn 복원
+        console.warn = originalConsoleWarn;
+        break; // 성공하면 반복 중단
+        
+      } catch (error) {
+        console.error(`Attempt ${attempt} failed for recordMap:`, error);
+        
+        if (attempt === maxRetries) {
+          console.error('All attempts failed for recordMap, continuing without it');
+          recordMap = null;
+          break;
         }
-      };
-      
-      recordMap = await notionClient.getPage(pageId);
-      
-      // 원래 console.warn 복원
-      console.warn = originalConsoleWarn;
-    } catch (error) {
-      console.error('Error fetching recordMap:', error);
-      recordMap = null;
+        
+        // 재시도 전 대기 (exponential backoff)
+        await new Promise(resolve => setTimeout(resolve, Math.pow(2, attempt) * 1000));
+      }
     }
     
     // Notion 블록을 마크다운으로 변환 (custom transformers 적용)
