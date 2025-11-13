@@ -1,7 +1,19 @@
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
-// use your own icon import if react-icons is not available
-import { GoArrowUpRight } from 'react-icons/go';
+
+const ArrowUpRightIcon = (props: React.SVGProps<SVGSVGElement>) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    stroke="currentColor"
+    strokeWidth={1.8}
+    {...props}
+  >
+    <path d="M7 17L17 7" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M9.5 7H17v7.5" strokeLinecap="round" strokeLinejoin="round" />
+  </svg>
+);
 
 type CardNavLink = {
   label: string;
@@ -222,7 +234,7 @@ const CardNav: React.FC<CardNavProps> = ({
                     href={lnk.href}
                     aria-label={lnk.ariaLabel}
                   >
-                    <GoArrowUpRight className="nav-card-link-icon shrink-0" aria-hidden="true" />
+                    <ArrowUpRightIcon className="nav-card-link-icon shrink-0" aria-hidden="true" />
                     {lnk.label}
                   </a>
                 ))}
