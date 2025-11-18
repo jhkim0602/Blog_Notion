@@ -183,4 +183,34 @@
       transparent 100%
     );
   }
+
+  /* 프로젝트 다이얼로그 텍스트 오버플로우 방지 */
+  .project-content {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  .project-content pre,
+  .project-content code {
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow-x: auto;
+  }
+
+  .project-content img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .project-content table {
+    table-layout: fixed;
+    width: 100%;
+  }
+
+  .project-content td,
+  .project-content th {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
 }
