@@ -39,19 +39,19 @@ export default async function AboutPage() {
               </div>
               <div className="flex items-center gap-4">
                 <a
-                  href="https://github.com/d5br5"
+                  href="https://github.com/jhkim0602"
                   className="p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   <Github className="w-5 h-5" />
                 </a>
                 <a
-                  href="mailto:ehgud456456@naver.com"
+                  href="mailto:jungkim030602@gmail.com"
                   className="p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   <Mail className="w-5 h-5" />
                 </a>
                 <a
-                  href="https://linkedin.com/in/doh-kim"
+                  href="https://www.linkedin.com/in/jungkim030602"
                   className="p-3 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
                 >
                   <Linkedin className="w-5 h-5" />
