@@ -1,7 +1,7 @@
 import { fetchPublishedPosts, getPost } from "@/lib/notion";
 
 export default async function sitemap() {
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-site.com";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://junghwan.blog";
 
   const posts = await fetchPublishedPosts();
   const allPosts = await Promise.all(posts.results.map((p) => getPost(p.id)));

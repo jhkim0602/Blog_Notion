@@ -1,14 +1,17 @@
 import type { Metadata, Viewport } from "next";
-import { Inter } from "next/font/google";
+import { IBM_Plex_Sans_KR } from "next/font/google";
 import "./globals.css";
 import "@/styles/notion.css";
 import Layout from "@/components/layout";
 import { ThemeProvider } from "@/components/theme-provider";
 import "katex/dist/katex.min.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const ibmPlexSansKR = IBM_Plex_Sans_KR({ 
+  subsets: ["latin"], 
+  weight: ["100", "200", "300", "400", "500", "600", "700"]
+});
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-site.com";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://junghwan.blog";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -89,7 +92,7 @@ export default function RootLayout({
   return (
     //Seo 최적화 lang="ko"로 변경
     <html lang="ko" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={ibmPlexSansKR.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

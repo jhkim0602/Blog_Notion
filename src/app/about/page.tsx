@@ -1,44 +1,17 @@
-"use client";
-
 import { Github, Linkedin, Mail, MapPin } from "lucide-react";
-import { useState, useEffect } from "react";
-import { ProjectDialog } from "@/components/project-dialog";
-import { NotionProject } from "@/lib/notion-projects";
+import { NotionProject, fetchProjects } from "@/lib/notion-projects";
+import AboutClient from "@/components/about-client";
+import Image from "next/image";
 
-export default function AboutPage() {
-  const [selectedProject, setSelectedProject] = useState<string | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [projects, setProjects] = useState<NotionProject[]>([]);
-  const [loading, setLoading] = useState(true);
+async function getProjects(): Promise<NotionProject[]> {
+  const projects = await fetchProjects();
+  return projects;
+}
 
-  useEffect(() => {
-    const loadProjects = async () => {
-      try {
-        const response = await fetch('/api/projects');
-        if (!response.ok) {
-          throw new Error('Failed to fetch projects');
-        }
-        const projectsData = await response.json();
-        setProjects(projectsData);
-      } catch (error) {
-        console.error('Error loading projects:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+export const revalidate = 300; // 5분마다 갱신
 
-    loadProjects();
-  }, []);
-
-  const handleProjectClick = (projectSlug: string) => {
-    setSelectedProject(projectSlug);
-    setIsDialogOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-    setSelectedProject(null);
-  };
+export default async function AboutPage() {
+  const projects = await getProjects();
 
   return (
     <div className="min-h-screen bg-white dark:bg-black text-gray-900 dark:text-gray-100">
@@ -86,7 +59,16 @@ export default function AboutPage() {
               </div>
             </div>
             <div className="flex-shrink-0">
-              <div className="w-32 h-32 rounded-full bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/20 dark:to-purple-900/20 shadow-sm"></div>
+              <div className="w-32 h-32 rounded-full overflow-hidden shadow-lg border-2 border-gray-100 dark:border-gray-700">
+                <Image
+                  src="/my-avatar.png"
+                  alt="김정환 프로필 사진"
+                  width={128}
+                  height={128}
+                  className="w-full h-full object-cover"
+                  priority
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -227,65 +209,9 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Projects */}
-        <section className="flex min-h-0 flex-col gap-y-3 print-force-new-page scroll-mb-16">
-          <h2 className="text-2xl font-bold">
-            Projects
-          </h2>
-          {loading ? (
-            <div className="flex items-center justify-center py-8">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-gray-100"></div>
-              <span className="ml-2">프로젝트 로딩 중...</span>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 print:grid-cols-3 print:gap-2">
-              {projects.map((project) => (
-                <button 
-                  key={project.id}
-                  type="button" 
-                  aria-haspopup="dialog" 
-                  aria-expanded="false" 
-                  data-state="closed"
-                  onClick={() => handleProjectClick(project.slug)}
-                  className="w-full h-full"
-                >
-                  <div className="rounded-lg border text-card-foreground flex h-full flex-col overflow-hidden p-4 text-left hover:shadow-lg transition-shadow duration-200">
-                    <div className="flex flex-col space-y-1.5">
-                      <div>
-                        <h3 className="font-semibold tracking-tight flex items-center gap-1.5 text-base">
-                          {project.title}
-                          <div className="size-1 rounded-full bg-green-500"></div>
-                        </h3>
-                        <p className="text-sm text-muted-foreground mt-1">{project.date_range}</p>
-                        <p className="text-sm text-muted-foreground mb-1 mt-3">{project.description}</p>
-                      </div>
-                    </div>
-                    <div className="text-pretty text-sm text-muted-foreground mt-auto flex">
-                      <div className="mt-2 flex flex-wrap gap-1">
-                        {project.tech_stack.map((tech, index) => (
-                          <div 
-                            key={index}
-                            className="inline-flex items-center rounded-md border text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-nowrap border-transparent bg-secondary text-secondary-foreground hover:bg-secondary/60 px-1.5 py-0.5 print:px-1 print:py-0.5 print:text-[8px] print:leading-tight"
-                          >
-                            {tech}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </button>
-              ))}
-            </div>
-          )}
-        </section>
+        {/* Projects - 클라이언트 컴포넌트로 분리 */}
+        <AboutClient projects={projects} />
       </div>
-      
-      {/* Project Detail Dialog */}
-      <ProjectDialog 
-        isOpen={isDialogOpen}
-        onClose={handleDialogClose}
-        projectSlug={selectedProject}
-      />
     </div>
   );
 }
