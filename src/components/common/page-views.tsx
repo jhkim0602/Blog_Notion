@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { Eye } from "lucide-react";
-import CountUp from "@/components/CountUp";
-import DecryptedText from "@/components/DecryptedText";
+import CountUp from "@/components/ui-effects/count-up";
+import DecryptedText from "@/components/ui-effects/decrypted-text";
 
 export default function PageViews() {
   const [totalViews, setTotalViews] = useState<number | null>(null);

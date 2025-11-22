@@ -39,10 +39,10 @@ const fetchProjectContent = async (slug: string): Promise<NotionProject | null> 
   }
 };
 
-export const ProjectDialog: React.FC<ProjectDialogProps> = ({ 
-  isOpen, 
-  onClose, 
-  projectSlug 
+export const ProjectDialog: React.FC<ProjectDialogProps> = ({
+  isOpen,
+  onClose,
+  projectSlug
 }) => {
   const [project, setProject] = useState<NotionProject | null>(null);
   const [loading, setLoading] = useState(false);
@@ -109,7 +109,7 @@ export const ProjectDialog: React.FC<ProjectDialogProps> = ({
               {project.description}
             </p>
           )}
-          
+
           {/* 기술 스택 */}
           {project.tech_stack && project.tech_stack.length > 0 && (
             <div className="mb-4">
@@ -165,8 +165,8 @@ export const ProjectDialog: React.FC<ProjectDialogProps> = ({
                 </p>
               ),
               a: ({ href, children }) => (
-                <a 
-                  href={href} 
+                <a
+                  href={href}
                   className="text-blue-600 dark:text-blue-400 hover:underline break-all"
                   target="_blank"
                   rel="noopener noreferrer"
@@ -182,9 +182,9 @@ export const ProjectDialog: React.FC<ProjectDialogProps> = ({
                 </div>
               ),
               img: ({ src, alt }) => (
-                <img 
-                  src={src} 
-                  alt={alt} 
+                <img
+                  src={src}
+                  alt={alt}
                   className="max-w-full h-auto rounded-lg my-4"
                 />
               ),
@@ -206,7 +206,7 @@ export const ProjectDialog: React.FC<ProjectDialogProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh]">
+      <DialogContent className="max-w-[90vw] md:max-w-7xl max-h-[90vh]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-bold">
             프로젝트 상세 정보

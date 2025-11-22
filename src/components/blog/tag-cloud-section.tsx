@@ -4,8 +4,8 @@ import { useState, useMemo } from "react";
 import { Post, getWordCount } from "@/lib/notion";
 import Link from "next/link";
 import { Clock } from "lucide-react";
-import TextType from "@/components/TextType";
-import { AnimatedListItem } from "@/components/AnimatedList";
+import TextType from "@/components/ui-effects/typing-text";
+import { AnimatedListItem } from "@/components/ui-effects/animated-list";
 
 interface TagCloudSectionProps {
   posts: Post[];
@@ -57,7 +57,7 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
   // 태그 클라우드 색상 배열
   const colors = [
     "bg-blue-100 text-blue-700 hover:bg-blue-200 dark:bg-blue-900/30 dark:text-blue-300",
-    "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300", 
+    "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-300",
     "bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300",
     "bg-pink-100 text-pink-700 hover:bg-pink-200 dark:bg-pink-900/30 dark:text-pink-300",
     "bg-yellow-100 text-yellow-700 hover:bg-yellow-200 dark:bg-yellow-900/30 dark:text-yellow-300",
@@ -88,10 +88,10 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
                   onClick={() => toggleTag(tag)}
                   className={`
                     cursor-target
-                    ${getTagSize(count)} 
+                    ${getTagSize(count)}
                     ${colors[index % colors.length]}
                     ${selectedTags.includes(tag) ? 'ring-2 ring-blue-500' : ''}
-                    rounded-full font-medium transition-all duration-200 
+                    rounded-full font-medium transition-all duration-200
                     transform hover:scale-105 hover:shadow-md
                     animate-pulse
                   `}
@@ -145,12 +145,12 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
                             </span>
                           </div>
                         )}
-                        
+
                         {/* 제목 */}
                         <h3 className="font-semibold text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 line-clamp-2 mb-3 transition-colors">
                           {post.title}
                         </h3>
-                        
+
                         {/* 날짜 + 읽기 시간 */}
                         <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
                           <time>{dateFormatter.format(new Date(post.date))}</time>
@@ -165,7 +165,7 @@ export default function TagCloudSection({ posts }: TagCloudSectionProps) {
                   </AnimatedListItem>
                 );
               })}
-              
+
               {filteredPosts.length === 0 && (
                 <div className="text-center py-8">
                   <p className="text-gray-500 dark:text-gray-400">

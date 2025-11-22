@@ -1,7 +1,7 @@
 import { fetchPublishedPostsSummary as fetchPublishedPosts, Post } from "@/lib/notion";
-import PostFilterClient from "@/components/post-filter-client";
-import { Bio } from "@/components/bio";
-import TagCloudSection from "@/components/tag-cloud-section";
+import PostFilterClient from "@/components/blog/post-list-filter";
+import { Bio } from "@/components/common/bio";
+import TagCloudSection from "@/components/blog/tag-cloud-section";
 
 async function getPosts(): Promise<Post[]> {
   const posts = await fetchPublishedPosts();
@@ -16,7 +16,7 @@ export default async function Home() {
     <>
       <div className="container max-w-6xl mx-auto px-4 py-8">
         <Bio />
-        
+
         {/* Section 1 */}
         <TagCloudSection posts={posts} />
 

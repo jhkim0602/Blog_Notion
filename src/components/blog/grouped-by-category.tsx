@@ -1,7 +1,7 @@
 "use client";
 
 import { Post } from "@/lib/notion";
-import PostCard from "@/components/post-card";
+import PostCard from "@/components/blog/post-card";
 import { motion } from "framer-motion";
 
 interface GroupedByCategoryProps {

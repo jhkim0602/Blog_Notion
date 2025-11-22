@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo, useLayoutEffect, useRef } from "react";
 import { Post } from "@/lib/notion";
-import PostCard from "@/components/post-card";
+import PostCard from "@/components/blog/post-card";
 import { gsap } from "gsap";
 
 interface PostFilterClientProps {
@@ -19,11 +19,11 @@ export default function PostFilterClient({ posts }: PostFilterClientProps) {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [mounted, setMounted] = useState(false);
   const cardsContainerRef = useRef<HTMLDivElement | null>(null);
-  
+
   useEffect(() => {
     setMounted(true);
   }, []);
-  
+
   // 카테고리별 포스트 수 계산 (memoization으로 안정화)
   const categoryStats = useMemo(() => {
     return posts.reduce((acc, post) => {
@@ -32,18 +32,18 @@ export default function PostFilterClient({ posts }: PostFilterClientProps) {
       return acc;
     }, {} as Record<string, number>);
   }, [posts]);
-  
+
   // 카테고리 목록을 안정화
   const sortedCategories = useMemo(() => {
     return Object.entries(categoryStats).sort(([a], [b]) => a.localeCompare(b, 'ko'));
   }, [categoryStats]);
-  
+
   const allCount = posts.length;
-  
+
   // 카테고리 필터링
   const filteredPosts = useMemo(() => {
-    return activeCategory === "all" 
-      ? posts 
+    return activeCategory === "all"
+      ? posts
       : posts.filter(post => (post.category || "기타") === activeCategory);
   }, [posts, activeCategory]);
 
@@ -100,7 +100,7 @@ export default function PostFilterClient({ posts }: PostFilterClientProps) {
           >
             All ({allCount})
           </button>
-          
+
           {sortedCategories.map(([category, count]) => (
               <button
                 key={category}
@@ -125,7 +125,7 @@ export default function PostFilterClient({ posts }: PostFilterClientProps) {
           </div>
         ))}
       </div>
-      
+
       {filteredPosts.length === 0 && (
         <div className="text-center py-12">
           <p className="text-gray-500 dark:text-gray-400">해당 카테고리에 포스트가 없습니다.</p>

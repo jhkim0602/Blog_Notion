@@ -1,9 +1,9 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import GradientText from "@/components/GradientText";
-import { ModeToggle } from "@/components/mode-toggle";
-import PageViews from "@/components/page-views"; // PageViews 컴포넌트 임포트
+import GradientText from "@/components/ui-effects/gradient-text";
+import { ModeToggle } from "@/components/common/mode-toggle";
+import PageViews from "@/components/common/page-views"; // PageViews 컴포넌트 임포트
 
 export default function Header() {
   return (

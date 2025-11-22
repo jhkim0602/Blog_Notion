@@ -1,6 +1,6 @@
 import { Github, Linkedin, Mail, MapPin } from "lucide-react";
 import { NotionProject, fetchProjects } from "@/lib/notion-projects";
-import AboutClient from "@/components/about-client";
+import AboutClient from "@/components/features/about-profile-section";
 import Image from "next/image";
 
 async function getProjects(): Promise<NotionProject[]> {

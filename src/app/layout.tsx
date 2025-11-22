@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import "@/styles/notion.css";
-import Layout from "@/components/layout";
-import { ThemeProvider } from "@/components/theme-provider";
+import Layout from "@/components/common/page-layout";
+import { ThemeProvider } from "@/components/common/theme-provider";
 import "katex/dist/katex.min.css";
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://junghwan.blog";
