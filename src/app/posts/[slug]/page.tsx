@@ -6,7 +6,7 @@ import { Metadata } from "next";
 import NotionRendererWrapper from "@/components/blog/notion-renderer";
 import "@/styles/notion.css";
 import "react-notion-x/src/styles.css";
-import "prismjs/themes/prism-tomorrow.css";
+import "@/styles/prism-theme.css";
 import "katex/dist/katex.min.css";
 import PostViewCounter from "@/components/blog/post-view-counter";
 import Toc from "@/components/blog/table-of-contents";

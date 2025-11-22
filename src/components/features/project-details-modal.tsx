@@ -26,15 +26,27 @@ interface NotionProject {
 }
 
 // API 호출 함수
+// API 호출 함수
 const fetchProjectContent = async (slug: string): Promise<NotionProject | null> => {
+  console.log(`[ProjectDialog] Fetching project content for slug: ${slug}`);
   try {
-    const response = await fetch(`/api/projects/${slug}`);
+    const url = `/api/projects/${slug}`;
+    console.log(`[ProjectDialog] Request URL: ${url}`);
+
+    const response = await fetch(url);
+    console.log(`[ProjectDialog] Response status: ${response.status}`);
+
     if (!response.ok) {
-      throw new Error('Project not found');
+      const errorText = await response.text();
+      console.error(`[ProjectDialog] Fetch failed: ${response.status} ${response.statusText}`, errorText);
+      throw new Error(`Project not found: ${response.status}`);
     }
-    return await response.json();
+
+    const data = await response.json();
+    console.log(`[ProjectDialog] Fetch success`);
+    return data;
   } catch (error) {
-    console.error('Error fetching project:', error);
+    console.error('[ProjectDialog] Error fetching project:', error);
     return null;
   }
 };
