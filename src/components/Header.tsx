@@ -21,6 +21,7 @@ export default function Header() {
                 width={32}
                 height={32}
                 className="rounded-full bg-transparent"
+                priority
               />
               <GradientText className="mx-0 inline-flex rounded-none bg-transparent p-0 font-bold text-base sm:text-xl whitespace-nowrap">
                 KJH's Dev Log

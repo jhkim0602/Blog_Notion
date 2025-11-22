@@ -24,11 +24,11 @@ export interface NotionProject {
   recordMap?: any;
 }
 
-// 프로젝트 데이터베이스에서 모든 프로젝트 가져오기
+// 프로젝트 데이터베이스에서 모든 프로젝트 가져오기 (메타데이터만)
 export async function fetchProjects(): Promise<NotionProject[]> {
   // 환경변수에서 프로젝트 데이터베이스 ID 가져오기
   const projectDatabaseId = process.env.NOTION_PROJECTS_DATABASE_ID;
-  
+
   if (!projectDatabaseId) {
     console.error('NOTION_PROJECTS_DATABASE_ID is not set');
     return [];
@@ -45,14 +45,23 @@ export async function fetchProjects(): Promise<NotionProject[]> {
       ]
     });
 
-    const projects = await Promise.all(
-      response.results.map(async (page: any) => {
-        const project = await getProjectContent(page.id);
-        return project;
-      })
-    );
+    const projects = response.results.map((page: any) => {
+      const properties = page.properties;
 
-    return projects.filter(Boolean) as NotionProject[];
+      return {
+        id: page.id,
+        title: properties.Title?.title?.map((t: any) => t.plain_text).join("") || "Untitled",
+        slug: properties.Title?.title?.map((t: any) => t.plain_text).join("").toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-').replace(/^-|-$/g, '') || page.id,
+        description: properties.Description?.rich_text?.map((t: any) => t.plain_text).join("") || "",
+        content: "", // 목록 조회 시에는 본문을 가져오지 않음
+        tech_stack: properties["Tech Stack"]?.multi_select?.map((tag: any) => tag.name) || [],
+        status: "Published",
+        date_range: properties["Date Range"]?.rich_text?.map((t: any) => t.plain_text).join("") || "",
+        featured_image: undefined,
+      };
+    });
+
+    return projects;
   } catch (error) {
     console.error('Error fetching projects:', error);
     return [];
@@ -63,7 +72,7 @@ export async function fetchProjects(): Promise<NotionProject[]> {
 export const getProjectContent = cache(async (pageId: string): Promise<NotionProject | null> => {
   try {
     const page = await notion.pages.retrieve({ page_id: pageId }) as any;
-    
+
     if (!page || !page.properties) {
       console.error('Invalid project page data from Notion API');
       return null;
@@ -94,8 +103,16 @@ export const getProjectContent = cache(async (pageId: string): Promise<NotionPro
   }
 });
 
-// 슬러그로 프로젝트 찾기
+// 슬러그로 프로젝트 찾기 (상세 내용 포함)
 export async function getProjectBySlug(slug: string): Promise<NotionProject | null> {
+  // 1. 메타데이터 목록에서 해당 슬러그를 가진 프로젝트 찾기
   const projects = await fetchProjects();
-  return projects.find(project => project.slug === slug) || null;
+  const foundProject = projects.find(project => project.slug === slug);
+
+  if (!foundProject) {
+    return null;
+  }
+
+  // 2. 해당 프로젝트의 상세 내용(본문 포함) 가져오기
+  return await getProjectContent(foundProject.id);
 }

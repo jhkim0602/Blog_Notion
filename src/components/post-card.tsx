@@ -20,7 +20,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
         className="absolute inset-0 z-10"
         aria-label={post.title}
       />
-      
+
       {/* 추천 배지 */}
       {featured && (
         <div className="absolute top-3 right-3 z-20">
@@ -37,6 +37,7 @@ export default function PostCard({ post, featured = false }: PostCardProps) {
             src={post.coverImage}
             alt={post.title}
             fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover transition-transform duration-300 group-hover:scale-105"
           />
         ) : (

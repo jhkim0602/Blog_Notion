@@ -101,7 +101,7 @@ export default async function PostPage({ params }: PostPageProps) {
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
-      
+
       <div className="w-full max-w-5xl mx-auto px-3 sm:px-5 md:px-8 xl:pr-[300px]">
         <article data-article className="notion-page max-w-none">
           {post.coverImage && (
@@ -110,6 +110,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 src={post.coverImage}
                 alt={post.title}
                 fill
+                sizes="(max-width: 1024px) 100vw, 1024px"
                 className="object-cover"
                 priority
               />
@@ -144,11 +145,11 @@ export default async function PostPage({ params }: PostPageProps) {
           </div>
         </article>
       </div>
-      
+
       {/* TOC - Sticky sidebar for desktop */}
       <div
         className="hidden lg:block fixed z-10 w-[240px]"
-        style={{ 
+        style={{
           top: "200px",
           right: "max(32px, calc((100vw - 1280px) / 2))"
         }}
