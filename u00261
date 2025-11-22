@@ -1,0 +1,20 @@
+Error occurred prerendering page "/about". Read more: https://nextjs.org/docs/messages/prerender-error
+Error: Cannot find module '/Users/junghwan/Desktop/Blog_Notion/.next/server/app/about/page.js'
+Require stack:
+- /Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/server/require.js
+- /Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/server/load-components.js
+- /Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/build/utils.js
+- /Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/build/worker.js
+- /Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/compiled/jest-worker/processChild.js
+    at Module._resolveFilename (node:internal/modules/cjs/loader:1207:15)
+    at /Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/server/require-hook.js:55:36
+    at Module._load (node:internal/modules/cjs/loader:1038:27)
+    at Module.require (node:internal/modules/cjs/loader:1289:19)
+    at mod.require (/Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/server/require-hook.js:65:28)
+    at require (node:internal/modules/helpers:182:18)
+    at requirePage (/Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/server/require.js:103:84)
+    at loadComponentsImpl (/Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/server/load-components.js:132:57)
+    at async exportPageImpl (/Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/export/worker.js:163:24)
+    at async Span.traceAsyncFn (/Users/junghwan/Desktop/Blog_Notion/node_modules/.pnpm/next@15.3.3_@babel+core@7.28.5_react-dom@19.2.0_react@19.2.0__react@19.2.0/node_modules/next/dist/trace/trace.js:157:20)
+Export encountered an error on /about/page: /about, exiting the build.
+ ⨯ Next.js build worker exited with code: 1 and signal: null

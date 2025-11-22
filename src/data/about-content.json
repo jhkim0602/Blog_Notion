@@ -1,0 +1,49 @@
+{
+  "profile": {
+    "name": "김정환",
+    "title": "백엔드 공부중인 대딩이",
+    "bio": "여기는 제 소개하는 칸 입니다. 대딩이 2학년이고요 열심히 공부중이고 이것저것 하면서 이것저것 저것저것 매끈매끈한 매끈매끄나핟!",
+    "location": "북한",
+    "avatar": "/my-avatar.png",
+    "social": {
+      "github": "https://github.com/jhkim0602",
+      "email": "jungkim030602@gmail.com",
+      "linkedin": "https://www.linkedin.com/in/jungkim030602"
+    }
+  },
+  "workExperience": [
+    {
+      "company": "취업하고싶어요",
+      "companyUrl": "#",
+      "period": "Upcoming",
+      "position": "흠 Spring Boot로... 열심히 공부 중 입니당",
+      "responsibilities": [
+        "백엔드 개발 공부",
+        "Spring Boot 학습"
+      ]
+    },
+    {
+      "company": "취업하고싶어요",
+      "companyUrl": "#",
+      "period": "여긴 일한 기간",
+      "position": "직무!",
+      "responsibilities": [
+        "업무 내용 1",
+        "업무 내용 2"
+      ]
+    }
+  ],
+  "education": [
+    {
+      "school": "부천대학교",
+      "period": "2022 ~ ing",
+      "major": "컴퓨터 소프트웨어학과"
+    }
+  ],
+  "skills": [
+    "HTML",
+    "CSS",
+    "JavaScript",
+    "Next.js"
+  ]
+}
