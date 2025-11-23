@@ -16,7 +16,8 @@
       "Bash(pnpm add:*)",
       "Bash(rm:*)",
       "Bash(pnpm remove:*)",
-      "Bash(pnpm run:*)"
+      "Bash(pnpm run:*)",
+      "Bash(lsof:*)"
     ],
     "deny": [],
     "ask": []

@@ -17,7 +17,7 @@ function getAboutContent(): AboutContent {
   return JSON.parse(fileContents) as AboutContent;
 }
 
-export const revalidate = 0; // 항상 최신 데이터 사용
+export const revalidate = 60; // 60초 캐싱
 
 export default async function AboutPage() {
   const projects = await getProjects();
